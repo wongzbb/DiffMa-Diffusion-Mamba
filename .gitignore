@@ -1,0 +1,11 @@
+# Ignore image and model files
+*.jpg
+*.png
+*.h5
+*.pth
+*.npy
+*.pt
+result_sample/
+results/
+wandb/
+__pycache__/
