@@ -55,6 +55,15 @@ def find_model(model_name):
         checkpoint = checkpoint["ema"]
     return checkpoint
 
+def find_model_model(model_name):
+    """
+    Finds a pre-trained model. Alternatively, loads a model from a local path.
+    """
+    assert os.path.isfile(model_name), f'Could not find checkpoint at {model_name}'
+    checkpoint = torch.load(model_name, map_location=lambda storage, loc: storage)
+    checkpoint = checkpoint["model"]
+    return checkpoint
+
 def requires_grad(model, flag=True):
     """
     Set requires_grad flag for all parameters in a model.
@@ -105,7 +114,7 @@ def main(args):
         logger = create_logger(experiment_dir)
         if args.wandb:
             wandb.init(project=args.model.replace('/','_'))
-            # wandb.init(project=args.model.replace('/','_'), id='ylhfep72', resume='must')
+            # wandb.init(project=args.model.replace('/','_'), id='ylhfep72', resume='must')   # load the previous run
             wandb.config = {"learning_rate": 0.0001, 
                             "epochs": args.epochs, 
                             "batch_size": args.global_batch_size,
@@ -127,12 +136,22 @@ def main(args):
         d_state=args.d_state,
     )
 
-    # state_dict = find_model('./results/009-DiM-L-2/checkpoints/0090000.pt')
+    # load model from pretrained model
+    # state_dict = find_model_model('./results/002-DiM-L-2/checkpoints/0360000.pt')
     # model.load_state_dict(state_dict)
 
     # Note that parameter initialization is done within the DiM constructor
     ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
+    # load ema from pretrained model
+    # ema = DiM_models[args.model](
+    #     input_size=latent_size,
+    #     dt_rank=args.dt_rank,
+    #     d_state=args.d_state,
+    # ).to(device)
+    # state_dict_ema = find_model('./results/002-DiM-L-2/checkpoints/0360000.pt')
+    # ema.load_state_dict(state_dict_ema)
     requires_grad(ema, False)
+
     model = DDP(model.to(device), device_ids=[rank])
 
     diffusion = create_diffusion(timestep_respacing="")  # default: 1000 steps, linear noise schedule, see ./diffusion/__init__.py
@@ -175,7 +194,7 @@ def main(args):
 
     # Variables for monitoring/logging purposes:
     train_steps = 0
-    # train_steps = 90000
+    # train_steps = 360000
     log_steps = 0
     running_loss = 0
     start_time = time()
