@@ -1,0 +1,6 @@
+2024-04-17 at 13:49:32 | INFO | Experiment directory created at results_ct/002-vision_encoder
+2024-04-17 at 13:49:44 | INFO | DiT Parameters: 15,938
+2024-04-17 at 13:49:44 | INFO | Training for 100 epochs...
+2024-04-17 at 13:49:44 | INFO | Beginning epoch 0...
+2024-04-17 at 13:49:55 | INFO | (1.6%) (step=0000010) Train Loss: 0.19391954, Train Steps/Sec: 0.94
+2024-04-17 at 13:49:59 | INFO | (3.2%) (step=0000020) Train Loss: 0.17002109, Train Steps/Sec: 2.36

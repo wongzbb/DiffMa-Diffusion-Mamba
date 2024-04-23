@@ -7,7 +7,7 @@ import argparse
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from zeta.nn import VisionEmbedding
-from load_data import train_dataset, sampler
+from load_data_for_brain import train_dataset, sampler
 from torch.cuda.amp import GradScaler, autocast
 import wandb
 from glob import glob
