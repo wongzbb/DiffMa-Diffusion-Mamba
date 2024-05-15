@@ -47,18 +47,18 @@ def transform_train(image, mask, mri, size=(224,224)):
     mask = TF.resize(mask, size, interpolation=transforms.InterpolationMode.NEAREST)
     mri = TF.resize(mri, size, interpolation=transforms.InterpolationMode.NEAREST)
 
-    # random spin
-    if random.random() > 0.5:
-        angle = random.choice([90, 180, 270])
-        image = TF.rotate(image, angle)
-        mask = TF.rotate(mask, angle, interpolation=transforms.InterpolationMode.NEAREST)
-        mri = TF.rotate(mri, angle, interpolation=transforms.InterpolationMode.NEAREST)
+    # # random spin
+    # if random.random() > 0.5:
+    #     angle = random.choice([90, 180, 270])
+    #     image = TF.rotate(image, angle)
+    #     mask = TF.rotate(mask, angle, interpolation=transforms.InterpolationMode.NEAREST)
+    #     mri = TF.rotate(mri, angle, interpolation=transforms.InterpolationMode.NEAREST)
 
-    # random horizontal flip
-    if random.random() > 0.5:
-        image = TF.hflip(image)
-        mask = TF.hflip(mask)
-        mri = TF.hflip(mri)
+    # # random horizontal flip
+    # if random.random() > 0.5:
+    #     image = TF.hflip(image)
+    #     mask = TF.hflip(mask)
+    #     mri = TF.hflip(mri)
 
     # to tensor
     image = TF.to_tensor(image)
@@ -83,36 +83,9 @@ def transform_test(image, mask, mir, size=(224,224)):
 
     return image, mask, mir
 
-
-
-# train
-ct_image_folder_train = '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/train2D/B_norm/'    #CT
-mir_image_folder_train = '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/train2D/A_norm/'    #MIR
-mask_image_folder_train = '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/train2D/C_norm/'    #mask
-
-# val
-ct_image_folder_val = '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/val2D/B_norm/'    #CT
-mir_image_folder_val = '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/val2D/A_norm/'    #MIR
-mask_image_folder_val = '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/val2D/C_norm/'    #mask
-
-train_dataset = NpyDataset(ct_image_folder_train, mask_image_folder_train, mir_image_folder_train, transform=transform_train)
-val_dataset = NpyDataset(ct_image_folder_val, mask_image_folder_val, mir_image_folder_val, transform=transform_test)
-
 dist.init_process_group("nccl")
 rank = dist.get_rank()
 
-sampler = DistributedSampler(
-    train_dataset,
-    num_replicas=dist.get_world_size(),
-    rank=rank,
-    shuffle=True,
-    seed=global_seed
-)
-
-sampler_test = DistributedSampler(
-    val_dataset,
-    num_replicas=dist.get_world_size(),
-    rank=rank,
-    shuffle=True,
-    seed=global_seed
-)
+def get_sampler(dataset_):
+    sampler = DistributedSampler(dataset_, num_replicas=dist.get_world_size(), rank=rank, shuffle=True, seed=global_seed)
+    return sampler

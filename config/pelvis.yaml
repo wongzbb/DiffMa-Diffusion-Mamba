@@ -1,0 +1,48 @@
+epochs: 300
+log_every: 10 
+ckpt_every: 20_000
+accumulation_steps: 1
+lr: 1e-4
+
+results_dir: "./results/pelvis"
+# model: "DiM-L/2"
+model: "DiM-B/2"
+image_size: 224  #[224, 256, 512]
+global_batch_size: 1
+global_seed: 0
+vae: "ema" #choices=["ema", "mse"]
+num_workers: 8
+ct_ckpt: "./pretrain_ct_encoder/patch_size_2.pt"
+dt_rank: 32
+d_state: 32
+
+init_from_pretrain_ckpt: True
+# pretrain_ckpt_path: "./results/011-DiM-L-2/checkpoints/2180000.pt"  #317 218 312
+pretrain_ckpt_path: "./results/009-DiM-B-2/checkpoints/4920000.pt"  #317 218 312
+# init_train_steps: 2_180_000
+init_train_steps: 4_920_000
+lr_: 1e-5
+
+
+
+#sample
+# ckpt: "./results/011-DiM-L-2/checkpoints/2180000.pt"
+ckpt: "./results/009-DiM-B-2/checkpoints/4920000.pt"
+save_dir: "./result_sample/pelvis"
+seed: 0
+sample_global_batch_size: 16
+sample_num_steps: 250
+sample_num_workers: 1
+load_ckpt_type: "ema"   #choices=["ema", "model"]
+
+
+
+# train
+ct_image_folder_train: '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/train2D/B_norm/'    #CT
+mir_image_folder_train: '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/train2D/A_norm/'    #MIR
+mask_image_folder_train: '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/train2D/C_norm/'    #mask
+
+# val
+ct_image_folder_val: '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/val2D/B_norm/'    #CT
+mir_image_folder_val: '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/val2D/A_norm/'    #MIR
+mask_image_folder_val: '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/val2D/C_norm/'    #mask

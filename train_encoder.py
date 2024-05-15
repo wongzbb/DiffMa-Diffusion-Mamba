@@ -7,7 +7,7 @@ import argparse
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from zeta.nn import VisionEmbedding
-from load_data import train_dataset, sampler
+from load_data import get_sampler, transform_train, NpyDataset
 from torch.cuda.amp import GradScaler, autocast
 import wandb
 from glob import glob
@@ -94,6 +94,8 @@ def main(args):
 
     opt = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=0)
     
+    train_dataset = NpyDataset(args.ct_image_folder_train, args.mask_image_folder_train, args.mir_image_folder_train, transform=transform_train)
+    sampler=get_sampler(train_dataset)
     train_loader = DataLoader(train_dataset, batch_size=int(args.global_batch_size // dist.get_world_size()), shuffle=False, sampler=sampler, num_workers=args.num_workers, drop_last=True)
     update_ema(ema, model.module, decay=0)  # Ensure EMA is initialized with synced weights
     ema.eval() 

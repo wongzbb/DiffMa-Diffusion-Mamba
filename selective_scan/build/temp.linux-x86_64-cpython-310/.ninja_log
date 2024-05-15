@@ -1,0 +1,10 @@
+# ninja log v5
+1	25611	1714995675974665838	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cus/selective_scan_core_fwd.o	f915869d36d015b4
+0	29634	1714995679998567966	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cus/selective_scan.o	86c71243965b9894
+1	85038	1714995735389278645	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cus/selective_scan_core_bwd.o	583731e1e8d12cb4
+5	25598	1714995761980695952	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cusndstate/selective_scan_core_fwd.o	dedf20809b206348
+5	29956	1714995766352602283	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cusndstate/selective_scan_ndstate.o	c9c6b01fcebcc824
+4	84288	1714995820659486112	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cusndstate/selective_scan_core_bwd.o	25153a02e45a0ebc
+6	29162	1714995850650905204	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cusoflex/selective_scan_oflex.o	e32eb57c8c2e4db8
+6	38625	1714995860106726978	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cusoflex/selective_scan_core_fwd.o	4435b7887437cf7a
+6	137486	1714995958960993100	/root/code/mamba+diffusion/selective_scan/build/temp.linux-x86_64-cpython-310/csrc/selective_scan/cusoflex/selective_scan_core_bwd.o	facf5b7e16c3584e

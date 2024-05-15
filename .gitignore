@@ -9,3 +9,7 @@ result_sample/
 results/
 wandb/
 __pycache__/
+load_data_for_brain.py
+train_encoder_for_brain.py
+train_for_brain.py
+sample_for_brain.py
