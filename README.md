@@ -14,6 +14,11 @@ conda install cudatoolkit==11.8 -c nvidia
 conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 conda install -c "nvidia/label/cuda-11.8.0" cuda-nvcc
 
+conda install cudatoolkit==11.6 -c nvidia
+pip install torch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 --index-url https://download.pytorch.org/whl/cu116
+conda install -c "nvidia/label/cuda-11.6.0" cuda-nvcc
+
+
 pip3 install -U zetascale, wandb, diffusers, open_clip_torch
 ```
 ## 📚Data Preparation

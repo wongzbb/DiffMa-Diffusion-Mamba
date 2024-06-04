@@ -236,6 +236,8 @@ def main(args):
             z_mri = z_mri.to(device)
 
             with torch.no_grad():
+                if not torch.all((z_mri >= -1) & (z_mri <= 1)):
+                    z_mri = ((z_mri - z_mri.min()) * 1.0 / (z_mri.max() - z_mri.min())) * 2.0 - 1.0  #6.03改
                 z_mri = vae.encode(z_mri).latent_dist.sample().mul_(0.18215)
                 x_ = vae.encode(x_ct).latent_dist.sample().mul_(0.18215)
                 weight, x_ct_2 = ct_encoder(x_)

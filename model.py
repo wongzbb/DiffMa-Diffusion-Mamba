@@ -21,8 +21,7 @@ from typing import Optional
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from torch import nn, Tensor
-from zeta.nn import SSM
-from block.mamba_block import modulate, Spiral_MambaBlock, Zig_MambaBlock, \
+from block.mamba_block2 import modulate, Spiral_MambaBlock, Zig_MambaBlock, \
 ViM_MambaBlock, VMamba_MambaBlock, EfficientVMamba_MambaBlock
 from tools import spiral, zig, vmamba_
 
@@ -375,6 +374,14 @@ def get_1d_sincos_pos_embed_from_grid(embed_dim, pos):
 #################################################################################
 #                                   DiM Configs                                 #
 #################################################################################
+def DiM_XXL_2(**kwargs):
+    return DiM(depth=56, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
+
+def DiM_XXL_4(**kwargs):
+    return DiM(depth=56, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
+
+def DiM_XXL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiM(depth=56, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
 
 def DiM_XL_2(**kwargs):
     return DiM(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
@@ -451,6 +458,8 @@ def ZigMa_S_4(**kwargs):
 def ZigMa_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
     return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
 
+def ZigMa_BL_2(**kwargs):
+    return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
 #---------------------------------------------------------------------------------------------------
 # code reproduction of Vision Mamba block,
 # from paper 'Vision Mamba: Efficient Visual Representation Learning with Bidirectional State Space Model'.
@@ -490,7 +499,8 @@ def ViM_S_4(**kwargs):
 def ViM_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
     return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
 
-
+def ViM_BL_2(**kwargs):
+    return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
 #---------------------------------------------------------------------------------------------------
 # code reproduction of VMamba block,
 # from paper 'VMamba: Visual State Space Model'.
@@ -529,6 +539,9 @@ def VMamba_S_4(**kwargs):
 
 def VMamba_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
     return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
+
+def VMamba_BL_2(**kwargs):
+    return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
 
 
 #---------------------------------------------------------------------------------------------------
@@ -570,9 +583,13 @@ def EMamba_S_4(**kwargs):
 def EMamba_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
     return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
 
+def EMamba_BL_2(**kwargs):
+    return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
+
 
 DiM_models = {
     #---------------------------------------Ours------------------------------------------#
+    'DiM-XXL/2': DiM_XXL_2,  'DiM-XXL/4': DiM_XXL_4,  'DiM-XXL/7': DiM_XXL_7,
     'DiM-XL/2': DiM_XL_2,  'DiM-XL/4': DiM_XL_4,  'DiM-XL/7': DiM_XL_7,
     'DiM-L/2' : DiM_L_2,   'DiM-L/4' : DiM_L_4,   'DiM-L/7' : DiM_L_7,
     'DiM-B/2' : DiM_B_2,   'DiM-B/4' : DiM_B_4,   'DiM-B/7' : DiM_B_7,
@@ -582,19 +599,23 @@ DiM_models = {
     'ZigMa-L/2' : ZigMa_L_2,   'ZigMa-L/4' : ZigMa_L_4,   'ZigMa-L/7' : ZigMa_L_7,
     'ZigMa-B/2' : ZigMa_B_2,   'ZigMa-B/4' : ZigMa_B_4,   'ZigMa-B/7' : ZigMa_B_7,
     'ZigMa-S/2' : ZigMa_S_2,   'ZigMa-S/4' : ZigMa_S_4,   'ZigMa-S/7' : ZigMa_S_7,
+    'ZigMa-BL/2' : ZigMa_BL_2,
     #--------------------------code reproduction of Vision Mamba--------------------------#
     'ViM-XL/2': ViM_XL_2,  'ViM-XL/4': ViM_XL_4,  'ViM-XL/7': ViM_XL_7,
     'ViM-L/2' : ViM_L_2,   'ViM-L/4' : ViM_L_4,   'ViM-L/7' : ViM_L_7,
     'ViM-B/2' : ViM_B_2,   'ViM-B/4' : ViM_B_4,   'ViM-B/7' : ViM_B_7,
     'ViM-S/2' : ViM_S_2,   'ViM-S/4' : ViM_S_4,   'ViM-S/7' : ViM_S_7,
+    'ViM-BL/2' : ViM_BL_2,
     #---------------------------code reproduction of VMamba-------------------------------#
     'VMamba-XL/2': VMamba_XL_2,  'VMamba-XL/4': VMamba_XL_4,  'VMamba-XL/7': VMamba_XL_7,
     'VMamba-L/2' : VMamba_L_2,   'VMamba-L/4' : VMamba_L_4,   'VMamba-L/7' : VMamba_L_7,
     'VMamba-B/2' : VMamba_B_2,   'VMamba-B/4' : VMamba_B_4,   'VMamba-B/7' : VMamba_B_7,
     'VMamba-S/2' : VMamba_S_2,   'VMamba-S/4' : VMamba_S_4,   'VMamba-S/7' : VMamba_S_7,
+    'VMamba-BL/2' : VMamba_BL_2,
     #----------------------code reproduction of EfficientVMamba---------------------------#
     'EMamba-XL/2': EMamba_XL_2,  'EMamba-XL/4': EMamba_XL_4,  'EMamba-XL/7': EMamba_XL_7,
     'EMamba-L/2' : EMamba_L_2,   'EMamba-L/4' : EMamba_L_4,   'EMamba-L/7' : EMamba_L_7,
     'EMamba-B/2' : EMamba_B_2,   'EMamba-B/4' : EMamba_B_4,   'EMamba-B/7' : EMamba_B_7,
     'EMamba-S/2' : EMamba_S_2,   'EMamba-S/4' : EMamba_S_4,   'EMamba-S/7' : EMamba_S_7,
+    'EMamba-BL/2' : EMamba_BL_2,
 }

@@ -101,8 +101,8 @@ def main(args):
         z_mri = torch.cat([z_mri] * 3, dim=1)
 
         with torch.no_grad():
-            if not torch.all((z_mri >= -1) & (z_mri <= 1)):
-                z_mri = ((z_mri - z_mri.min()) * 1.0 / (z_mri.max() - z_mri.min())) * 2.0 - 1.0  #4.21改
+            # if not torch.all((z_mri >= -1) & (z_mri <= 1)):
+            #     z_mri = ((z_mri - z_mri.min()) * 1.0 / (z_mri.max() - z_mri.min())) * 2.0 - 1.0  #4.21改
             x_ = vae.encode(x_ct).latent_dist.sample().mul_(0.18215)
             x_ct = image_encoder(x_ct)
             ct_weight, x_ct_2 = ct_encoder(x_)
@@ -123,7 +123,7 @@ def main(args):
         save_image(samples[:,2,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_3.png', nrow=4, normalize=True, value_range=(-1, 1))
 
 
-        if item == 6:
+        if item == 20:
             exit()
  
 

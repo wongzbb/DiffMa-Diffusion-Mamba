@@ -9,8 +9,16 @@ result_sample/
 results/
 wandb/
 __pycache__/
+whl/
 selective_scan/
 load_data_for_brain.py
 train_encoder_for_brain.py
 train_for_brain.py
 sample_for_brain.py
+add_noise.py
+compute_gflot.py
+sample2.py
+ssim.py
+tes_ssm.py
+test.py
+train2.py

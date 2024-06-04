@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from zeta.nn import VisionEmbedding
+from block.visionEmbedding import VisionEmbedding
 
 
 class CT_Encoder(nn.Module):
