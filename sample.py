@@ -8,14 +8,13 @@ from diffusion import create_diffusion
 from diffusers.models import AutoencoderKL
 # from train import find_model
 from torch.utils.data import DataLoader
-from model import DiM_models
+from model import DiffMa_models
 import argparse
 from load_data import NpyDataset, transform_test, get_sampler
 import logging
 from open_clip import create_model_from_pretrained
 from block.CT_encoder import CT_Encoder
 from omegaconf import OmegaConf
-
 
 def find_model(model_name):
     """
@@ -32,16 +31,15 @@ def main(args):
     torch.manual_seed(args.seed)
     torch.set_grad_enabled(False)
     device = "cuda" if torch.cuda.is_available() else "cpu"
-
     print(device)
 
     if args.ckpt is None:
-        assert args.model == "DiM-L/2"
+        assert args.model == "DiffMa-L/2"
         assert args.image_size in [224, 256, 512]
 
     # Load model:
     latent_size = args.image_size // 8
-    model = DiM_models[args.model](
+    model = DiffMa_models[args.model](
         input_size=latent_size,
         dt_rank=args.dt_rank,
         d_state=args.d_state,
@@ -85,16 +83,15 @@ def main(args):
     item = 0
     for x_ct, _, z_mri in val_loader:
         item+=1
-        if item<15:
-            continue
-
+        # if item<15:
+        #     continue
         n = x_ct.shape[0]
         z = torch.randn(n, 4, latent_size, latent_size, device=device)  #Random noise
 
         x_ct = x_ct.to(device)
         x_ct = torch.cat([x_ct] * 3, dim=1)
         x_ct_ = x_ct
-        save_image(x_ct, "sample_ct.png", nrow=4, normalize=True, value_range=(-1, 1))
+        # save_image(x_ct, "sample_ct.png", nrow=4, normalize=True, value_range=(-1, 1))
 
         z_mri = z_mri.to(device)
         z_mri = torch.cat([z_mri] * 3, dim=1)
@@ -120,8 +117,6 @@ def main(args):
         # save_image(samples[:,0,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_1.png', nrow=4, normalize=True, value_range=(-1, 1))
         # save_image(samples[:,1,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_2.png', nrow=4, normalize=True, value_range=(-1, 1))
         # save_image(samples[:,2,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_3.png', nrow=4, normalize=True, value_range=(-1, 1))
-
-
         # if item == 20:
         #     exit()
  
