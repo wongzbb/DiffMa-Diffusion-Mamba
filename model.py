@@ -1,13 +1,3 @@
-# Copyright (c) Meta Platforms, Inc. and affiliates.
-# All rights reserved.
-
-# --------------------------------------------------------
-# References:
-# GLIDE: https://github.com/openai/glide-text2im
-# MAE: https://github.com/facebookresearch/mae/blob/main/models_mae.py
-# DiT: https://github.com/facebookresearch/DiT/tree/main
-# --------------------------------------------------------
-
 import torch
 import random
 import torch.nn as nn
@@ -25,7 +15,6 @@ from block.mamba_block import modulate, Spiral_MambaBlock, Zig_MambaBlock, \
 ViM_MambaBlock, VMamba_MambaBlock, EfficientVMamba_MambaBlock, DiTBlock
 # from block.unet2 import UNet as U_Net
 from tools import spiral, zig, vmamba_
-
 
 #################################################################################
 #                  Embedding Layers for Timesteps and Patch                     #
@@ -120,7 +109,7 @@ class FinalLayer(nn.Module):
         return x
 
 
-class DiM(nn.Module):
+class DiffMa(nn.Module):
     """
     Diffusion model with a Mamba backbone.
     """
@@ -380,271 +369,270 @@ def get_1d_sincos_pos_embed_from_grid(embed_dim, pos):
 #################################################################################
 #                                   DiM Configs                                 #
 #################################################################################
-def DiM_XXL_2(**kwargs):
-    return DiM(depth=56, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
+def DiffMa_XXL_2(**kwargs):
+    return DiffMa(depth=56, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
 
-def DiM_XXL_4(**kwargs):
-    return DiM(depth=56, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
+def DiffMa_XXL_4(**kwargs):
+    return DiffMa(depth=56, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
 
-def DiM_XXL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=56, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
+def DiffMa_XXL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiffMa(depth=56, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
 
-def DiM_XL_2(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
+def DiffMa_XL_2(**kwargs):
+    return DiffMa(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
 
-def DiM_XL_4(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
+def DiffMa_XL_4(**kwargs):
+    return DiffMa(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
 
-def DiM_XL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
+def DiffMa_XL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiffMa(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
 
-def DiM_L_2(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
+def DiffMa_L_2(**kwargs):
+    return DiffMa(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
 
-def DiM_L_4(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
+def DiffMa_L_4(**kwargs):
+    return DiffMa(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
 
-def DiM_L_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
+def DiffMa_L_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiffMa(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
 
-def DiM_B_2(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
+def DiffMa_B_2(**kwargs):
+    return DiffMa(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
 
-def DiM_B_4(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
+def DiffMa_B_4(**kwargs):
+    return DiffMa(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
 
-def DiM_B_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
+def DiffMa_B_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiffMa(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
 
-def DiM_S_2(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
+def DiffMa_S_2(**kwargs):
+    return DiffMa(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='spiral', **kwargs)
 
-def DiM_S_4(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
+def DiffMa_S_4(**kwargs):
+    return DiffMa(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='spiral', **kwargs)
 
-def DiM_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
+def DiffMa_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiffMa(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='spiral', **kwargs)
 
 #---------------------------------------------------------------------------------------------------
 # code reproduction of zigma block,
 # from paper 'ZigMa: Zigzag Mamba Diffusion Model'.
 def ZigMa_XL_2(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
 
 def ZigMa_XL_4(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='zig', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='zig', **kwargs)
 
 def ZigMa_XL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
 
 def ZigMa_L_2(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
 
 def ZigMa_L_4(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='zig', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='zig', **kwargs)
 
 def ZigMa_L_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
 
 def ZigMa_B_2(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
 
 def ZigMa_B_4(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='zig', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='zig', **kwargs)
 
 def ZigMa_B_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
 
 def ZigMa_S_2(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
 
 def ZigMa_S_4(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='zig', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='zig', **kwargs)
 
 def ZigMa_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='zig', **kwargs)
 
 def ZigMa_BL_2(**kwargs):
-    return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
+    return DiffMa(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='zig', **kwargs)
 #---------------------------------------------------------------------------------------------------
 # code reproduction of Vision Mamba block,
 # from paper 'Vision Mamba: Efficient Visual Representation Learning with Bidirectional State Space Model'.
 def ViM_XL_2(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
 
 def ViM_XL_4(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='vim', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='vim', **kwargs)
 
 def ViM_XL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
 
 def ViM_L_2(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
 
 def ViM_L_4(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='vim', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='vim', **kwargs)
 
 def ViM_L_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
 
 def ViM_B_2(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
 
 def ViM_B_4(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='vim', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='vim', **kwargs)
 
 def ViM_B_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
 
 def ViM_S_2(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
 
 def ViM_S_4(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='vim', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='vim', **kwargs)
 
 def ViM_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='vim', **kwargs)
 
 def ViM_BL_2(**kwargs):
-    return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
+    return DiffMa(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='vim', **kwargs)
 #---------------------------------------------------------------------------------------------------
 # code reproduction of VMamba block,
 # from paper 'VMamba: Visual State Space Model'.
 def VMamba_XL_2(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
 
 def VMamba_XL_4(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='vmamba', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='vmamba', **kwargs)
 
 def VMamba_XL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
 
 def VMamba_L_2(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
 
 def VMamba_L_4(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='vmamba', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='vmamba', **kwargs)
 
 def VMamba_L_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
 
 def VMamba_B_2(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
 
 def VMamba_B_4(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='vmamba', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='vmamba', **kwargs)
 
 def VMamba_B_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
 
 def VMamba_S_2(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
 
 def VMamba_S_4(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='vmamba', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='vmamba', **kwargs)
 
 def VMamba_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='vmamba', **kwargs)
 
 def VMamba_BL_2(**kwargs):
-    return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
+    return DiffMa(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='vmamba', **kwargs)
 
 
 #---------------------------------------------------------------------------------------------------
 # code reproduction of EfficientVMamba,
 # from paper 'EfficientVMamba: Atrous Selective Scan for Light Weight Visual Mamba'.
 def EMamba_XL_2(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
 
 def EMamba_XL_4(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='efficientVMamba', **kwargs)
 
 def EMamba_XL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
 
 def EMamba_L_2(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
 
 def EMamba_L_4(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='efficientVMamba', **kwargs)
 
 def EMamba_L_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
 
 def EMamba_B_2(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
 
 def EMamba_B_4(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='efficientVMamba', **kwargs)
 
 def EMamba_B_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
 
 def EMamba_S_2(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
 
 def EMamba_S_4(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='efficientVMamba', **kwargs)
 
 def EMamba_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='efficientVMamba', **kwargs)
 
 def EMamba_BL_2(**kwargs):
-    return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
+    return DiffMa(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
 
 #---------------------------------------------------------------------------------------------------
 # code reproduction of DiT,
 # from paper 'Scalable Diffusion Models with Transformers'.
 def DiT_XL_2(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
 
 def DiT_XL_4(**kwargs):
-    return DiM(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
 
 def DiT_XL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
+    return DiffMa(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
 
 def DiT_L_2(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
 
 def DiT_L_4(**kwargs):
-    return DiM(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
 
 def DiT_L_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
+    return DiffMa(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
 
 def DiT_B_2(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
 
 def DiT_B_4(**kwargs):
-    return DiM(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
 
 def DiT_B_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
+    return DiffMa(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
 
 def DiT_S_2(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
 
 def DiT_S_4(**kwargs):
-    return DiM(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
 
 def DiT_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
-    return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
+    return DiffMa(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
 
 def DiT_SB_2(**kwargs):
-    return DiM(depth=7, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
-
+    return DiffMa(depth=7, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
 
 # def UNet_2(**kwargs):
 #     return U_Net(n_channels=4, out_channels=8, bilinear=True)
 
 DiM_models = {
     #---------------------------------------Ours------------------------------------------#
-    'DiM-XXL/2': DiM_XXL_2,  'DiM-XXL/4': DiM_XXL_4,  'DiM-XXL/7': DiM_XXL_7,
-    'DiM-XL/2': DiM_XL_2,  'DiM-XL/4': DiM_XL_4,  'DiM-XL/7': DiM_XL_7,
-    'DiM-L/2' : DiM_L_2,   'DiM-L/4' : DiM_L_4,   'DiM-L/7' : DiM_L_7,
-    'DiM-B/2' : DiM_B_2,   'DiM-B/4' : DiM_B_4,   'DiM-B/7' : DiM_B_7,
-    'DiM-S/2' : DiM_S_2,   'DiM-S/4' : DiM_S_4,   'DiM-S/7' : DiM_S_7,
+    'DiffMa-XXL/2': DiffMa_XXL_2,  'DiffMa-XXL/4': DiffMa_XXL_4,  'DiffMa-XXL/7': DiffMa_XXL_7,
+    'DiffMa-XL/2': DiffMa_XL_2,  'DiffMa-XL/4': DiffMa_XL_4,  'DiffMa-XL/7': DiffMa_XL_7,
+    'DiffMa-L/2' : DiffMa_L_2,   'DiffMa-L/4' : DiffMa_L_4,   'DiffMa-L/7' : DiffMa_L_7,
+    'DiffMa-B/2' : DiffMa_B_2,   'DiffMa-B/4' : DiffMa_B_4,   'DiffMa-B/7' : DiffMa_B_7,
+    'DiffMa-S/2' : DiffMa_S_2,   'DiffMa-S/4' : DiffMa_S_4,   'DiffMa-S/7' : DiffMa_S_7,
     #-----------------------------code reproduction of zigma------------------------------#
     'ZigMa-XL/2': ZigMa_XL_2,  'ZigMa-XL/4': ZigMa_XL_4,  'ZigMa-XL/7': ZigMa_XL_7,
     'ZigMa-L/2' : ZigMa_L_2,   'ZigMa-L/4' : ZigMa_L_4,   'ZigMa-L/7' : ZigMa_L_7,

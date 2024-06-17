@@ -27,6 +27,6 @@ train2.py
 save_img.py
 sample3.py
 psnr.py
-block/u_net.py
-block/unet2.py
+u_net.py
+unet2.py
 results_ct/

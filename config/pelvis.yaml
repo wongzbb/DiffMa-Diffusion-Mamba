@@ -5,7 +5,7 @@ accumulation_steps: 1
 lr: 1e-4
 
 results_dir: "./results/pelvis"
-model: "DiM-B/2"
+model: "DiffMa-L/2"
 image_size: 224  #[224, 256, 512]
 global_batch_size: 1
 

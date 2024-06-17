@@ -1,6 +1,3 @@
-"""
-Sample new images from a pre-trained DiT.
-"""
 import os
 import torch
 torch.backends.cuda.matmul.allow_tf32 = True
@@ -119,14 +116,14 @@ def main(args):
         save_image(samples, args.save_dir + '/' + str(item) + '_sample_gen.png', nrow=4, normalize=True, value_range=(-1, 1))
         save_image(z_mri, args.save_dir + '/' + str(item) + '_sample_ori.png', nrow=4, normalize=True, value_range=(-1, 1))
         save_image(x_ct_, args.save_dir + '/' + str(item) + '_sample_ct.png', nrow=4, normalize=True, value_range=(-1, 1))
-        print(item)
-        save_image(samples[:,0,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_1.png', nrow=4, normalize=True, value_range=(-1, 1))
-        save_image(samples[:,1,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_2.png', nrow=4, normalize=True, value_range=(-1, 1))
-        save_image(samples[:,2,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_3.png', nrow=4, normalize=True, value_range=(-1, 1))
+        # print(item)
+        # save_image(samples[:,0,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_1.png', nrow=4, normalize=True, value_range=(-1, 1))
+        # save_image(samples[:,1,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_2.png', nrow=4, normalize=True, value_range=(-1, 1))
+        # save_image(samples[:,2,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_3.png', nrow=4, normalize=True, value_range=(-1, 1))
 
 
-        if item == 20:
-            exit()
+        # if item == 20:
+        #     exit()
  
 
 
