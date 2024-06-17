@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 from block.visionEmbedding import VisionEmbedding
 
-
 class CT_Encoder(nn.Module):
     def __init__(
         self,
@@ -34,8 +33,7 @@ class CT_Encoder(nn.Module):
 
         self.norm = nn.LayerNorm(embed_dim)
         self.sigmoid = nn.Sigmoid()
-
-        
+       
     def forward(self, x: torch.Tensor):
         x = self.vision_embedding(x)
         max_out = self.fc(self.max_pool(x).squeeze(-1))

@@ -21,7 +21,7 @@ from typing import Optional
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from torch import nn, Tensor
-from block.mamba_block2 import modulate, Spiral_MambaBlock, Zig_MambaBlock, \
+from block.mamba_block import modulate, Spiral_MambaBlock, Zig_MambaBlock, \
 ViM_MambaBlock, VMamba_MambaBlock, EfficientVMamba_MambaBlock, DiTBlock
 # from block.unet2 import UNet as U_Net
 from tools import spiral, zig, vmamba_

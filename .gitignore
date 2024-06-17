@@ -29,3 +29,4 @@ sample3.py
 psnr.py
 block/unet2.py
 block/u_net.py
+results_ct/
