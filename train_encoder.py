@@ -47,14 +47,8 @@ def update_ema(ema_model, model, decay=0.9999):
         # TODO: Consider applying only to params that require_grad to avoid small numerical changes of pos_embed
         ema_params[name].mul_(decay).add_(param.data, alpha=1 - decay)
         
-        
-        
-
 
 def main(args):
-    """
-    Trains a new DiT model.
-    """
     assert torch.cuda.is_available(), "Training currently requires at least one GPU."
     scaler = GradScaler()
     seed = args.global_seed
@@ -70,7 +64,7 @@ def main(args):
 
         os.makedirs(args.results_dir, exist_ok=True)  # Make results folder (holds all experiment subfolders)
         experiment_index = len(glob(f"{args.results_dir}/*"))
-        model_string_name = "vision_encoder"  # e.g., DiT-XL/2 --> DiT-XL-2 (for naming folders)
+        model_string_name = "vision_encoder" 
         experiment_dir = f"{args.results_dir}/{experiment_index:03d}-{model_string_name}"  # Create an experiment folder
         checkpoint_dir = f"{experiment_dir}/checkpoints"  # Stores saved model checkpoints
         os.makedirs(checkpoint_dir, exist_ok=True)
@@ -84,13 +78,11 @@ def main(args):
     model = CT_Encoder(img_size=28, patch_size=2, in_channels=4, embed_dim=args.embed_dim, contain_mask_token=True)
     ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
 
-
     model = torch.nn.parallel.DistributedDataParallel(model.to(device), device_ids=[rank], find_unused_parameters=True)
-
     vae = AutoencoderKL.from_pretrained(f"stabilityai/sd-vae-ft-{args.vae}").to(device)
 
     if rank == 0:
-        logger.info(f"DiT Parameters: {sum(p.numel() for p in model.parameters()):,}")
+        logger.info(f"Parameters: {sum(p.numel() for p in model.parameters()):,}")
 
     opt = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=0)
     
@@ -127,8 +119,7 @@ def main(args):
                 weight, x = model(x_ct)
 
             loss = infoNCE_loss_b(x)
-            # if (item%50==0):
-            #     print(weight)
+
             if rank == 0 and args.wandb:
                 wandb.log({"loss": loss.item()})
 
@@ -140,7 +131,6 @@ def main(args):
             scaler.step(opt)
             scaler.update()
             update_ema(ema, model.module)
-
 
             # Log loss values:
             running_loss += loss.item()
@@ -177,11 +167,9 @@ def main(args):
                 dist.barrier()
 
     model.eval()  # important! This disables randomized embedding dropout
-    # do any sampling/FID calculation/etc. with ema (or model) in eval mode ...
 
 
 if __name__ == "__main__":
-    # Default args here will train DiT-XL/2 with the hyperparameters we used in our paper (except training iters).
     parser = argparse.ArgumentParser()
     # parser.add_argument("--data-path", type=str, required=True)
     parser.add_argument("--results-dir", type=str, default="results_ct")
@@ -198,72 +186,3 @@ if __name__ == "__main__":
     parser.add_argument("--autocast", action="store_true", help="Whether to use half-precision training.")
     args = parser.parse_args()
     main(args)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import torch
-# import torch.nn as nn
-# import torch.nn.functional as F
-
-# # 主模型(自监督任务)
-# class MainModel(nn.Module):
-#     def __init__(self):
-#         super(MainModel, self).__init__()
-#         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, padding=1)
-#         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, padding=1)
-#         self.pool = nn.MaxPool2d(2, 2)
-#         self.fc1 = nn.Linear(32 * 8 * 8, 128)
-#         self.fc2 = nn.Linear(128, 64)
-
-#     def forward(self, x):
-#         x = self.pool(F.relu(self.conv1(x)))
-#         x = self.pool(F.relu(self.conv2(x)))
-#         x = x.view(-1, 32 * 8 * 8)
-#         x = F.relu(self.fc1(x))
-#         proj_features = self.fc2(x)
-#         return proj_features, x  # 返回投影特征和中间特征图
-
-
-
-
-# # 训练
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# main_model = MainModel().to(device)
-# auxiliary_head = AuxiliaryHead(128, 64, 10).to(device)  # 10个原型
-# combined_model = CombinedModel(main_model, auxiliary_head).to(device)
-
-# criterion_main = nn.CrossEntropyLoss()
-# optimizer = torch.optim.Adam(combined_model.parameters(), lr=0.001)
-
-# num_epochs = 10
-# alpha = 0.1  # 辅助损失权重
-
-# for epoch in range(num_epochs):
-#     for data in dataloader:
-#         data = data.to(device)
-#         optimizer.zero_grad()
-#         proj_features, contrastive_loss = combined_model(data)
-#         loss_main = criterion_main(proj_features, data)  # 主任务对比损失
-#         loss_aux = contrastive_loss  # 辅助对比损失
-#         loss = loss_main + alpha * loss_aux
-#         loss.backward()
-#         optimizer.step()
-
-# # 获取辅助对比学习头的原型
-# prototypes = auxiliary_head.prototypes.detach().cpu().numpy()

@@ -1,8 +1,4 @@
-"""
-A minimal training script for DiM using PyTorch DDP.
-"""
 import torch
-# the first flag below was False when we tested this script but True makes A100 training a lot faster:
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 import torch.distributed as dist
@@ -26,7 +22,7 @@ from diffusers.models import AutoencoderKL
 from load_data import get_sampler, transform_train, NpyDataset
 from open_clip import create_model_from_pretrained
 from torch.cuda.amp import GradScaler, autocast
-from model import DiM_models
+from model import DiffMa_models
 from block.CT_encoder import CT_Encoder
 from omegaconf import OmegaConf
 
@@ -108,7 +104,7 @@ def main(args):
     if rank == 0:
         os.makedirs(args.results_dir, exist_ok=True)  # Make results folder (holds all experiment subfolders)
         experiment_index = len(glob(f"{args.results_dir}/*"))
-        model_string_name = args.model.replace("/", "-")  # e.g., DiM-XL/2 --> DiM-XL-2 (for naming folders)
+        model_string_name = args.model.replace("/", "-")  
         experiment_dir = f"{args.results_dir}/{experiment_index:03d}-{model_string_name}"  # Create an experiment folder
         checkpoint_dir = f"{experiment_dir}/checkpoints"  # Stores saved model checkpoints
         os.makedirs(checkpoint_dir, exist_ok=True)
@@ -131,7 +127,7 @@ def main(args):
     # Create model:
     assert args.image_size % 8 == 0, "Image size must be divisible by 8 (for the VAE encoder)."
     latent_size = args.image_size // 8
-    model = DiM_models[args.model](
+    model = DiffMa_models[args.model](
         input_size=latent_size,
         dt_rank=args.dt_rank,
         d_state=args.d_state,

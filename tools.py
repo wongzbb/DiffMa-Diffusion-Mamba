@@ -1,8 +1,4 @@
 
-#################################################################################
-#                                  for spiral scan                              #
-#################################################################################
-
 def spiral(n):
     matrix_list = []
     directions_list=[[(0, 1), (1, 0), (0, -1), (-1, 0)], 
@@ -46,14 +42,6 @@ def spiral(n):
             original_order_indexes_list.append(original_order_indexes)
     return matrix_list, original_order_indexes_list
 
-# def spiral_list(n: int, i: int):
-#     matrix_list, original_order_indexes_list = spiral(n)
-#     return matrix_list[(2*i)%16], matrix_list[(2*i)%16+1], original_order_indexes_list[(2*i)%16], original_order_indexes_list[(2*i)%16+1]
-
-
-#################################################################################
-#                                   for zig scan                                #
-#################################################################################
 
 def zig1(n):
     matrix = [[0] * n for _ in range(n)]
@@ -139,10 +127,6 @@ def zig(n: int, i: int):
     original_order_indexes = [index_mapping[i] for i in range(len(rearrange_list))]
     return rearrange_list, original_order_indexes
 
-
-#################################################################################
-#                                  for VMamba scan                              #
-#################################################################################
 def vmamba_(n: int):
     m_list = []
     m_list.append(zig1(n))
@@ -166,10 +150,3 @@ def vmamba_(n: int):
         original_list.append(original_order_indexes)
 
     return order_list, original_list
-
-
-
-#################################################################################
-#                            for EfficientVMamba scan                           #
-#################################################################################
-
