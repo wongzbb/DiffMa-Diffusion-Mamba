@@ -7,10 +7,12 @@
 *.pt
 result_sample/
 results/
+results_ct/
 wandb/
 __pycache__/
 whl/
 selective_scan/
+test_img/
 load_data_for_brain.py
 train_encoder_for_brain.py
 train_for_brain.py
@@ -22,3 +24,6 @@ ssim.py
 tes_ssm.py
 test.py
 train2.py
+save_img.py
+sample3.py
+psnr.py

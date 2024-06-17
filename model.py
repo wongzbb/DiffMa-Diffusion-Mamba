@@ -22,7 +22,8 @@ from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from torch import nn, Tensor
 from block.mamba_block2 import modulate, Spiral_MambaBlock, Zig_MambaBlock, \
-ViM_MambaBlock, VMamba_MambaBlock, EfficientVMamba_MambaBlock
+ViM_MambaBlock, VMamba_MambaBlock, EfficientVMamba_MambaBlock, DiTBlock
+from block.unet2 import UNet as U_Net
 from tools import spiral, zig, vmamba_
 
 
@@ -205,6 +206,14 @@ class DiM(nn.Module):
                                            d_state=d_state,) 
                 for i in range(depth) 
             ])
+        elif self.block_type == 'DiT':
+            self.blocks = nn.ModuleList([
+                DiTBlock(
+                    hidden_size=hidden_size, 
+                    num_heads=8,
+                    ) 
+                for i in range(depth) 
+            ])
 
 
 
@@ -297,11 +306,8 @@ class DiM(nn.Module):
 
         return x
 
+    
     def forward_with_cfg(self, x, t, y, y2, w, cfg_scale):
-        """
-        Forward pass of DiM, but also batches the unconditional forward pass for classifier-free guidance.
-        """
-        # from https://github.com/openai/glide-text2im/blob/main/notebooks/text2im.ipynb
         half = x[: len(x) // 2]
         combined = torch.cat([half, half], dim=0)
         model_out = self.forward(combined, t, y, y2, w)
@@ -314,6 +320,7 @@ class DiM(nn.Module):
         half_eps = uncond_eps + cfg_scale * (cond_eps - uncond_eps)
         eps = torch.cat([half_eps, half_eps], dim=0)
         return torch.cat([eps, rest], dim=1)
+
 
 
 #################################################################################
@@ -369,7 +376,6 @@ def get_1d_sincos_pos_embed_from_grid(embed_dim, pos):
 
     emb = np.concatenate([emb_sin, emb_cos], axis=1)  # (M, D)
     return emb
-
 
 #################################################################################
 #                                   DiM Configs                                 #
@@ -586,6 +592,51 @@ def EMamba_S_7(**kwargs):   # Important! If the input image dimension is not 224
 def EMamba_BL_2(**kwargs):
     return DiM(depth=13, hidden_size=512, patch_size=2, strip_size=2, block_type='efficientVMamba', **kwargs)
 
+#---------------------------------------------------------------------------------------------------
+# code reproduction of DiT,
+# from paper 'Scalable Diffusion Models with Transformers'.
+def DiT_XL_2(**kwargs):
+    return DiM(depth=28, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+
+def DiT_XL_4(**kwargs):
+    return DiM(depth=28, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
+
+def DiT_XL_7(**kwargs):  # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiM(depth=28, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
+
+def DiT_L_2(**kwargs):
+    return DiM(depth=16, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+
+def DiT_L_4(**kwargs):
+    return DiM(depth=16, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
+
+def DiT_L_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiM(depth=16, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
+
+def DiT_B_2(**kwargs):
+    return DiM(depth=8, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+
+def DiT_B_4(**kwargs):
+    return DiM(depth=8, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
+
+def DiT_B_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiM(depth=8, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
+
+def DiT_S_2(**kwargs):
+    return DiM(depth=4, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+
+def DiT_S_4(**kwargs):
+    return DiM(depth=4, hidden_size=512, patch_size=4, strip_size=4, block_type='DiT', **kwargs)
+
+def DiT_S_7(**kwargs):   # Important! If the input image dimension is not 224*224, change 7 to 8
+    return DiM(depth=4, hidden_size=512, patch_size=7, strip_size=7, block_type='DiT', **kwargs)
+
+def DiT_SB_2(**kwargs):
+    return DiM(depth=7, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
+
+
+def UNet_2(**kwargs):
+    return U_Net(n_channels=4, out_channels=8, bilinear=True)
 
 DiM_models = {
     #---------------------------------------Ours------------------------------------------#
@@ -618,4 +669,12 @@ DiM_models = {
     'EMamba-B/2' : EMamba_B_2,   'EMamba-B/4' : EMamba_B_4,   'EMamba-B/7' : EMamba_B_7,
     'EMamba-S/2' : EMamba_S_2,   'EMamba-S/4' : EMamba_S_4,   'EMamba-S/7' : EMamba_S_7,
     'EMamba-BL/2' : EMamba_BL_2,
+    #----------------------code reproduction of DiT---------------------------#
+    'DiT-XL/2': DiT_XL_2,  'DiT-XL/4': DiT_XL_4,  'DiT-XL/7': DiT_XL_7,
+    'DiT-L/2' : DiT_L_2,   'DiT-L/4' : DiT_L_4,   'DiT-L/7' : DiT_L_7,
+    'DiT-B/2' : DiT_B_2,   'DiT-B/4' : DiT_B_4,   'DiT-B/7' : DiT_B_7,
+    'DiT-S/2' : DiT_S_2,   'DiT-S/4' : DiT_S_4,   'DiT-S/7' : DiT_S_7,
+    'DiT-SB/2' : DiT_SB_2,
+    #----------------------code reproduction of U-Net diffusion---------------------------#
+    'UNet-2': UNet_2,
 }

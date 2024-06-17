@@ -88,6 +88,8 @@ def main(args):
     item = 0
     for x_ct, _, z_mri in val_loader:
         item+=1
+        if item<15:
+            continue
 
         n = x_ct.shape[0]
         z = torch.randn(n, 4, latent_size, latent_size, device=device)  #Random noise
@@ -101,8 +103,8 @@ def main(args):
         z_mri = torch.cat([z_mri] * 3, dim=1)
 
         with torch.no_grad():
-            # if not torch.all((z_mri >= -1) & (z_mri <= 1)):
-            #     z_mri = ((z_mri - z_mri.min()) * 1.0 / (z_mri.max() - z_mri.min())) * 2.0 - 1.0  #4.21改
+            if not torch.all((z_mri >= -1) & (z_mri <= 1)):
+                z_mri = ((z_mri - z_mri.min()) * 1.0 / (z_mri.max() - z_mri.min())) * 2.0 - 1.0  #4.21改
             x_ = vae.encode(x_ct).latent_dist.sample().mul_(0.18215)
             x_ct = image_encoder(x_ct)
             ct_weight, x_ct_2 = ct_encoder(x_)
@@ -117,7 +119,7 @@ def main(args):
         save_image(samples, args.save_dir + '/' + str(item) + '_sample_gen.png', nrow=4, normalize=True, value_range=(-1, 1))
         save_image(z_mri, args.save_dir + '/' + str(item) + '_sample_ori.png', nrow=4, normalize=True, value_range=(-1, 1))
         save_image(x_ct_, args.save_dir + '/' + str(item) + '_sample_ct.png', nrow=4, normalize=True, value_range=(-1, 1))
-        print(samples.shape)
+        print(item)
         save_image(samples[:,0,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_1.png', nrow=4, normalize=True, value_range=(-1, 1))
         save_image(samples[:,1,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_2.png', nrow=4, normalize=True, value_range=(-1, 1))
         save_image(samples[:,2,:,:].unsqueeze(1), args.save_dir + '/' + str(item) + '_sample_gen_3.png', nrow=4, normalize=True, value_range=(-1, 1))

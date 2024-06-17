@@ -1,12 +1,12 @@
-epochs: 300
+epochs: 50
 log_every: 10 
 ckpt_every: 50_000
 accumulation_steps: 1
 lr: 1e-4
 
 results_dir: "./results/pelvis"
-# model: "DiM-L/2"
-model: "ZigMa-BL/2"
+model: "UNet-2"
+# model: "ZigMa-BL/2"
 image_size: 224  #[224, 256, 512]
 global_batch_size: 1
 
@@ -15,7 +15,7 @@ vae: "ema" #choices=["ema", "mse"]
 num_workers: 4
 ct_ckpt: "./pretrain_ct_encoder/patch_size_2.pt"
 dt_rank: 16
-d_state: 16
+d_state: 16  #16for cuda
 
 init_from_pretrain_ckpt: False
 # pretrain_ckpt_path: "./results/011-DiM-L-2/checkpoints/2180000.pt"  #317 218 312
@@ -28,8 +28,8 @@ lr_: 1e-4
 
 #sample
 # ckpt: "./results/011-DiM-L-2/checkpoints/2180000.pt"
-ckpt: "results/pelvis/067-ZigMa-BL-2/checkpoints/0150000.pt" #"./results/pelvis/019-DiM-B-2/checkpoints/0300000.pt"
-save_dir: "./result_sample/pelvis"
+ckpt: "results/pelvis/019-DiM-B-2/checkpoints/1350000.pt" # "results/pelvis/019-DiM-B-2/checkpoints/0900000.pt" # "results/pelvis/067-ZigMa-BL-2/checkpoints/0600000.pt"  #"results/pelvis/019-DiM-B-2/checkpoints/0450000.pt" #"./results/pelvis/019-DiM-B-2/checkpoints/0300000.pt"
+save_dir: "./result_sample/pelvis_ssim_DiM_done"
 seed: 0
 sample_global_batch_size: 1 #16
 sample_num_steps: 250 #250

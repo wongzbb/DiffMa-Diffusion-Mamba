@@ -1,13 +1,17 @@
-epochs: 300
+epochs: 50
 log_every: 10 
 ckpt_every: 50_000
 accumulation_steps: 1
 lr: 1e-4
 
 results_dir: "./results/brain"
-model: "EMamba-S/2"
+model: "VMamba-BL/2"
+# model: "ZigMa-BL/2"
+# model: "DiM-B/2"
+# model: "UNet-2"
+
 image_size: 224  #[224, 256, 512]
-global_batch_size: 4
+global_batch_size: 8
 global_seed: 0
 vae: "ema" #choices=["ema", "mse"]
 num_workers: 8
@@ -23,12 +27,12 @@ lr_: 1e-4
 
 
 #sample
-ckpt: "./results/brain/003-DiM-B-2/checkpoints/0200000.pt"
-save_dir: "./result_sample/brain"
+ckpt: "results/brain/022-VMamba-BL-2/checkpoints/0750000.pt"  #results/011-DiM-L-2/checkpoints/2990000.pt
+save_dir: "./result_sample/brain_ssim_VMamaba_50epoch"
 seed: 0
 sample_global_batch_size: 1  #16
 sample_num_steps: 250   #250
-sample_num_workers: 8
+sample_num_workers: 1
 load_ckpt_type: "ema"   #choices=["ema", "model"]
 
 # train
