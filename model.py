@@ -23,7 +23,7 @@ from einops.layers.torch import Rearrange
 from torch import nn, Tensor
 from block.mamba_block2 import modulate, Spiral_MambaBlock, Zig_MambaBlock, \
 ViM_MambaBlock, VMamba_MambaBlock, EfficientVMamba_MambaBlock, DiTBlock
-from block.unet2 import UNet as U_Net
+# from block.unet2 import UNet as U_Net
 from tools import spiral, zig, vmamba_
 
 
@@ -635,8 +635,8 @@ def DiT_SB_2(**kwargs):
     return DiM(depth=7, hidden_size=512, patch_size=2, strip_size=2, block_type='DiT', **kwargs)
 
 
-def UNet_2(**kwargs):
-    return U_Net(n_channels=4, out_channels=8, bilinear=True)
+# def UNet_2(**kwargs):
+#     return U_Net(n_channels=4, out_channels=8, bilinear=True)
 
 DiM_models = {
     #---------------------------------------Ours------------------------------------------#
@@ -676,5 +676,5 @@ DiM_models = {
     'DiT-S/2' : DiT_S_2,   'DiT-S/4' : DiT_S_4,   'DiT-S/7' : DiT_S_7,
     'DiT-SB/2' : DiT_SB_2,
     #----------------------code reproduction of U-Net diffusion---------------------------#
-    'UNet-2': UNet_2,
+    # 'UNet-2': UNet_2,
 }
