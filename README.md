@@ -1,4 +1,4 @@
-# DiM-Diffusion-Mamba
+# DiffMa-Diffusion-Mamba
 Soft Masked Mamba Diffusion Model for CT to MRI Conversion (Official PyTorch Implementation)
 ###  [ArXiv Paper](https://arxiv.org) 
 
@@ -56,7 +56,7 @@ CUDA_VISIBLE_DEVICES=0 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_port=
 
 ## ⏳Training
 The weight of pretrained DiffMa can be found [here](https://huggingface.co/ZhenbinWang/DiffMa/tree/main).
-Train DiM with the resolution of 224x224 with `2` GPUs.
+Train DiffMa with the resolution of 224x224 with `2` GPUs.
 ```
 # use mamba1
 CUDA_VISIBLE_DEVICES=0,1 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=2 train.py --config ./config/brain.yaml --wandb
@@ -68,16 +68,16 @@ CUDA_VISIBLE_DEVICES=0,1 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_por
 - `--autocast`: This option enables half-precision training for the model. 
 
 
-## ⏳Training your embedder
+## ⏳Training Vision Embedder
 The weight of pretrained DiffMa can be found at [`pretrain_ct_embedder`](pretrain_ct_vision_embedder).
-Train CT Vision Embedder with patch_size=2 by the following scripts to customize the various arguments.
+Train CT Vision Embedder by the following scripts to customize the various arguments.
 ```
 CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 train_embedder.py --config ./config/pelvis.yaml
 ```
 
 Configure the models you wish to train in [`config`](config).
 ```
-DiM_models = {
+DiffMa_models = {
     #---------------------------------------Ours------------------------------------------#
     'DiffMa-XXL/2': DiffMa_XXL_2,  'DiffMa-XXL/4': DiffMa_XXL_4,  'DiffMa-XXL/7': DiffMa_XXL_7,
     'DiffMa-XL/2': DiffMa_XL_2,  'DiffMa-XL/4': DiffMa_XL_4,  'DiffMa-XL/7': DiffMa_XL_7,
