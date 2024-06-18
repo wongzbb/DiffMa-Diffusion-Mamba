@@ -12,7 +12,7 @@ global_batch_size: 1
 global_seed: 0
 vae: "ema" #choices=["ema", "mse"]
 num_workers: 4
-ct_ckpt: "./pretrain_ct_encoder/pelvis_patch_size_2.pt"
+ct_ckpt: "./pretrain_ct_vision_embedder/pelvis_patch_size_2.pt"
 dt_rank: 16
 d_state: 16 
 

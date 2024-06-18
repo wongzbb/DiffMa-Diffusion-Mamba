@@ -54,23 +54,27 @@ CUDA_VISIBLE_DEVICES=0 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_port=
 ```
 
 ## ⏳Training
-The weight of pretrained DiM can be found [here](https://huggingface.co/ZhenbinWang/DiffMa/tree/main).
+The weight of pretrained DiffMa can be found [here](https://huggingface.co/ZhenbinWang/DiffMa/tree/main).
 Train DiM with the resolution of 224x224 with `2` GPUs.
 ```
 # use mamba1
 CUDA_VISIBLE_DEVICES=0,1 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=2 train.py --config ./config/brain.yaml --wandb
 
 # use mamba2
+which ptxas  # will output your_ptxas_path
 CUDA_VISIBLE_DEVICES=0,1 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_port=12345 --nnodes=1 --nproc_per_node=2 train.py --config ./config/brain.yaml --use-mamba2 --wandb
 ```
 - `--autocast`: This option enables half-precision training for the model. 
-```
+
 
 ## ⏳Training your embedder
+The weight of pretrained DiffMa can be found at [`pretrain_ct_embedder`](pretrain_ct_embedder).
+Train CT Vision Embedder with patch_size=2 by the following scripts to customize the various arguments.
 ```
 CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 train_embedder.py --config ./config/pelvis.yaml
 ```
 
+```
 DiM_models = {
     #---------------------------------------Ours------------------------------------------#
     'DiffMa-XXL/2': DiffMa_XXL_2,  'DiffMa-XXL/4': DiffMa_XXL_4,  'DiffMa-XXL/7': DiffMa_XXL_7,
