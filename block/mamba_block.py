@@ -3,6 +3,7 @@ from einops import rearrange
 from torch import nn
 from timm.models.vision_transformer import Attention, Mlp
 from block.mamba import Mamba as ssm
+from block.mamba2 import Mamba2 as ssm2
 
 def modulate(x, shift, scale):
     return x * (1 + scale.unsqueeze(1)) + shift.unsqueeze(1)
@@ -21,6 +22,7 @@ class Spiral_MambaBlock(nn.Module):  #ours
         token_list_reversal: list,
         origina_list: list,
         origina_list_reversal: list,
+        use_mamba2: bool,
     ):
         super().__init__()
         self.D_dim = D_dim
@@ -34,26 +36,49 @@ class Spiral_MambaBlock(nn.Module):  #ours
         self.origina_list_reversal = origina_list_reversal
 
         self.norm1 = nn.LayerNorm(D_dim)
-        self.mamba1 = ssm(
-                d_model=D_dim, 
-                d_state=d_state, 
-                d_conv=4, 
-                expand=2, 
-                token_list=self.token_list, 
-                token_list_reversal=self.token_list_reversal,
-                origina_list = self.origina_list,
-                origina_list_reversal = self.origina_list_reversal,
-                )
-        self.mamba2 = ssm(
-                d_model=D_dim, 
-                d_state=d_state, 
-                d_conv=4, 
-                expand=2, 
-                token_list=self.token_list, 
-                token_list_reversal=self.token_list_reversal,
-                origina_list = self.origina_list,
-                origina_list_reversal = self.origina_list_reversal,
-                )
+
+        if use_mamba2:
+            self.mamba1 = ssm2(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    token_list=self.token_list, 
+                    token_list_reversal=self.token_list_reversal,
+                    origina_list = self.origina_list,
+                    origina_list_reversal = self.origina_list_reversal,
+                    )
+            self.mamba2 = ssm2(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    token_list=self.token_list, 
+                    token_list_reversal=self.token_list_reversal,
+                    origina_list = self.origina_list,
+                    origina_list_reversal = self.origina_list_reversal,
+                    )
+        else:
+            self.mamba1 = ssm(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    token_list=self.token_list, 
+                    token_list_reversal=self.token_list_reversal,
+                    origina_list = self.origina_list,
+                    origina_list_reversal = self.origina_list_reversal,
+                    )
+            self.mamba2 = ssm(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    token_list=self.token_list, 
+                    token_list_reversal=self.token_list_reversal,
+                    origina_list = self.origina_list,
+                    origina_list_reversal = self.origina_list_reversal,
+                    )
 
         self.adaLN_modulation = nn.Sequential(
             # nn.LayerNorm(D_dim*2),
@@ -119,6 +144,7 @@ class Zig_MambaBlock(nn.Module):
         d_state: int,
         token_list: list,
         origina_list: list,
+        use_mamba2: bool,
     ):
         super().__init__()
         self.D_dim = D_dim
@@ -135,14 +161,24 @@ class Zig_MambaBlock(nn.Module):
             nn.Linear(D_dim * 2, 3 * D_dim, bias=True),
         )
 
-        self.mamba = ssm(
-                d_model=D_dim, 
-                d_state=d_state, 
-                d_conv=4, 
-                expand=2, 
-                token_list=self.token_list, 
-                origina_list = self.origina_list,
-                )
+        if use_mamba2:
+            self.mamba = ssm2(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    token_list=self.token_list, 
+                    origina_list = self.origina_list,
+                    ) 
+        else:
+            self.mamba = ssm(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    token_list=self.token_list, 
+                    origina_list = self.origina_list,
+                    )
 
         self.initialize_weights()
 
@@ -177,6 +213,7 @@ class ViM_MambaBlock(nn.Module):
         dt_rank: int,
         dim_inner: int,
         d_state: int,
+        use_mamba2: bool,
     ):
         super().__init__()
         self.D_dim = D_dim
@@ -185,12 +222,20 @@ class ViM_MambaBlock(nn.Module):
         self.dim_inner = dim_inner
         self.d_state = d_state
 
-        self.mamba = ssm(
-                d_model=D_dim, 
-                d_state=d_state, 
-                d_conv=4, 
-                expand=2, 
-                )
+        if use_mamba2:
+            self.mamba = ssm2(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    )
+        else:
+            self.mamba = ssm(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    )
         self.norm1 = nn.LayerNorm(D_dim)
         self.adaLN_modulation = nn.Sequential(
             nn.SiLU(),
@@ -233,6 +278,7 @@ class VMamba_MambaBlock(nn.Module):
         d_state: int,
         token_list: list,
         origina_list: list,
+        use_mamba2: bool,
     ):
         super().__init__()
         self.D_dim = D_dim
@@ -244,14 +290,24 @@ class VMamba_MambaBlock(nn.Module):
         self.token_list = token_list
         self.origina_list = origina_list
 
-        self.mamba = ssm(
-                d_model=D_dim, 
-                d_state=d_state, 
-                d_conv=4, 
-                expand=2, 
-                token_list=self.token_list, 
-                origina_list = self.origina_list,
-                )
+        if use_mamba2:
+            self.mamba = ssm2(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    token_list=self.token_list, 
+                    origina_list = self.origina_list,
+                    )
+        else:
+            self.mamba = ssm(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    token_list=self.token_list, 
+                    origina_list = self.origina_list,
+                    )
 
         self.norm1 = nn.LayerNorm(D_dim)
         self.adaLN_modulation = nn.Sequential(
@@ -292,6 +348,7 @@ class EfficientVMamba_MambaBlock(nn.Module):
         dt_rank: int,
         dim_inner: int,
         d_state: int,
+        use_mamba2: bool,
     ):
         super().__init__()
         self.D_dim = D_dim
@@ -305,12 +362,20 @@ class EfficientVMamba_MambaBlock(nn.Module):
             nn.SiLU(),
             nn.Linear(D_dim * 2, 3 * D_dim, bias=True),
         )
-        self.mamba = ssm(
+        if use_mamba2:
+            self.mamba = ssm2(
                 d_model=D_dim, 
                 d_state=d_state, 
                 d_conv=4, 
                 expand=2, 
                 )
+        else:
+            self.mamba = ssm(
+                    d_model=D_dim, 
+                    d_state=d_state, 
+                    d_conv=4, 
+                    expand=2, 
+                    )
         self.initialize_weights()
 
     def forward(self, x: torch.Tensor, c: torch.Tensor, w: torch.Tensor):

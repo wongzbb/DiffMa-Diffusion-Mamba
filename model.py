@@ -123,8 +123,9 @@ class DiffMa(nn.Module):
         depth=16,
         learn_sigma=True,
         block_type='spiral',
-        dt_rank=32,
-        d_state=32,
+        dt_rank=16,
+        d_state=16,
+        use_mamba2=False,
     ):
         super().__init__()
         self.learn_sigma = learn_sigma
@@ -151,7 +152,8 @@ class DiffMa(nn.Module):
                                   E_dim=hidden_size*2, 
                                   dim_inner=hidden_size*2,
                                   dt_rank=dt_rank,  
-                                  d_state=d_state,) 
+                                  d_state=d_state,
+                                  use_mamba2=use_mamba2,) 
                 for i in range(depth) 
             ])
         elif self.block_type == 'zig':
@@ -162,7 +164,8 @@ class DiffMa(nn.Module):
                                E_dim=hidden_size*2, 
                                dim_inner=hidden_size*2,
                                dt_rank=dt_rank,  
-                               d_state=d_state,) 
+                               d_state=d_state,
+                               use_mamba2=use_mamba2,) 
                 for i in range(depth) 
             ])
         elif self.block_type == 'vim':
@@ -171,7 +174,8 @@ class DiffMa(nn.Module):
                                E_dim=hidden_size*2, 
                                dim_inner=hidden_size*2,
                                dt_rank=dt_rank,  
-                               d_state=d_state,) 
+                               d_state=d_state,
+                               use_mamba2=use_mamba2,) 
                 for i in range(depth) 
             ])
         elif self.block_type == 'vmamba':
@@ -183,7 +187,8 @@ class DiffMa(nn.Module):
                                   E_dim=hidden_size*2, 
                                   dim_inner=hidden_size*2,
                                   dt_rank=dt_rank,  
-                                  d_state=d_state,) 
+                                  d_state=d_state,
+                                  use_mamba2=use_mamba2,) 
                 for i in range(depth) 
             ])
         elif self.block_type == 'efficientVMamba':
@@ -192,7 +197,8 @@ class DiffMa(nn.Module):
                                            E_dim=hidden_size*2, 
                                            dim_inner=hidden_size*2,
                                            dt_rank=dt_rank,  
-                                           d_state=d_state,) 
+                                           d_state=d_state,
+                                           use_mamba2=use_mamba2,) 
                 for i in range(depth) 
             ])
         elif self.block_type == 'DiT':
@@ -203,7 +209,6 @@ class DiffMa(nn.Module):
                     ) 
                 for i in range(depth) 
             ])
-
 
 
         self.final_layer = FinalLayer(hidden_size, patch_size, self.out_channels)
@@ -626,7 +631,7 @@ def DiT_SB_2(**kwargs):
 # def UNet_2(**kwargs):
 #     return U_Net(n_channels=4, out_channels=8, bilinear=True)
 
-DiM_models = {
+DiffMa_models = {
     #---------------------------------------Ours------------------------------------------#
     'DiffMa-XXL/2': DiffMa_XXL_2,  'DiffMa-XXL/4': DiffMa_XXL_4,  'DiffMa-XXL/7': DiffMa_XXL_7,
     'DiffMa-XL/2': DiffMa_XL_2,  'DiffMa-XL/4': DiffMa_XL_4,  'DiffMa-XL/7': DiffMa_XL_7,

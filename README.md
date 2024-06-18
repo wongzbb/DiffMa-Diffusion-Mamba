@@ -15,6 +15,23 @@ pip install torch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 --index-url https
 conda install -c "nvidia/label/cuda-11.7.0" cuda-nvcc
 
 pip install open_clip_torch loguru wandb diffusers einops omegaconf torchmetrics decord accelerate pytest fvcore chardet yacs termcolor submitit tensorboardX seaborn
+
+conda install packaging
+
+mkdir whl & cd whl
+wget https://github.com/state-spaces/mamba/releases/download/v2.0.4/mamba_ssm-2.0.4+cu118torch2.0cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
+wget https://github.com/Dao-AILab/causal-conv1d/releases/download/v1.2.2.post1/causal_conv1d-1.2.2.post1+cu118torch2.0cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
+pip install causal_conv1d-1.2.2.post1+cu118torch2.0cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
+pip install mamba_ssm-2.0.4+cu118torch2.0cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
+cd ..
+
+pip install --upgrade triton
+which ptxas  # will output your ptxas_path
+#CUDA_VISIBLE_DEVICES=2 TRITON_PTXAS_PATH=ptxas_path torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 train.py --config config/brain.yaml --use-mamba2
+#CUDA_VISIBLE_DEVICES=2 torchrun --master_port=14945 --nnodes=1 --nproc_per_node=1 train.py --config config/pelvis.yaml
+
+# for Chinese
+export HF_ENDPOINT=https://hf-mirror.com
 ```
 ## 📚Data Preparation
 **pelvis**:  You can directly use the [processed images data](https://huggingface.co/datasets/ZhenbinWang/pelvis/tree/main) by ours without further data processing.
@@ -26,26 +43,13 @@ huggingface-cli download --repo-type dataset --resume-download ZhenbinWang/pelvi
 huggingface-cli download --repo-type dataset --resume-download ZhenbinWang/brain --local-dir ./datasets/brain/
 ```
 
-
 ## 🎇Sampling
 You can directly sample the MRI from the checkpoint model. Here is an example for quick usage for using our **pre-trained models**:
 1. Download the pre-trained weights from [here]().
 2. Run [`sample.py`](sample.py) by the following scripts to customize the various arguments.
 ```
-CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 sample.py \
-  --model DiM-L/2 \
-  --image-size 224 \
-  --global-batch-size 16 \
-  --ct-ckpt your_pretrain_CT-encoder_path \
-  --ckpt your_DiM_checkpoints_path \
-  --dt-rank 32 \
-  --d-state 32 \
-  --save-dir result_sample \
-  --seed 0 \
-  --num-sampling-steps 250 \
-  --load-ckpt-type ema
+CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 sample.py --config ./config/brain.yaml
 ```
-- `load-ckpt-type`: ema or model.
 
 ## ⏳Training
 The weight of pretrained DiM can be found [here](https://github.com), and in our implementation we use DiM-L/2 during training DiM.

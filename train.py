@@ -131,6 +131,7 @@ def main(args):
         input_size=latent_size,
         dt_rank=args.dt_rank,
         d_state=args.d_state,
+        use_mamba2 = args.use_mamba2,
     )
 
     if args.init_from_pretrain_ckpt:
@@ -315,6 +316,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--wandb", action="store_true", help="Enable WandB.")
     parser.add_argument("--autocast", action="store_true", help="Whether to use half-precision training.")
+    parser.add_argument("--use-mamba2", action="store_true", help="if you want use mamba2.")
     parser.add_argument("--config", type=str, required=True)
     args = parser.parse_args()
 
