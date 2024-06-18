@@ -75,6 +75,7 @@ Train CT Vision Embedder with patch_size=2 by the following scripts to customize
 CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 train_embedder.py --config ./config/pelvis.yaml
 ```
 
+Configure the models you wish to train in [`config`](config).
 ```
 DiM_models = {
     #---------------------------------------Ours------------------------------------------#
