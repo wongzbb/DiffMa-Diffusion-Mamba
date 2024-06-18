@@ -30,6 +30,15 @@ sample_num_steps: 250
 sample_num_workers: 1
 load_ckpt_type: "ema"   #choices=["ema", "model"]
 
+#train embedder
+embedder_epoch: 100
+embedder_ckpt_every: 5000
+embedder_num_workers: 4
+embedder_global_seed: 0
+embedder_global_batch_size: 32
+embedder_embed_dim: 512
+embedder_results_dir: './results_ct_pelvis'
+
 # train
 ct_image_folder_train: '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/train2D/B_norm/'    #CT
 mir_image_folder_train: '/root/code/CTtoMRI/datasets/SynthRAD2023/train/pelvis/train2D/A_norm/'    #MIR

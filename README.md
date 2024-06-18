@@ -66,6 +66,11 @@ CUDA_VISIBLE_DEVICES=0,1 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_por
 - `--autocast`: This option enables half-precision training for the model. 
 ```
 
+## ⏳Training your embedder
+```
+CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 train_embedder.py --config ./config/pelvis.yaml
+```
+
 DiM_models = {
     #---------------------------------------Ours------------------------------------------#
     'DiffMa-XXL/2': DiffMa_XXL_2,  'DiffMa-XXL/4': DiffMa_XXL_4,  'DiffMa-XXL/7': DiffMa_XXL_7,

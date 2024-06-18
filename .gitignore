@@ -8,6 +8,8 @@
 result_sample/
 results/
 results_ct/
+results_ct_brain/
+results_ct_pelvis/
 wandb/
 __pycache__/
 whl/

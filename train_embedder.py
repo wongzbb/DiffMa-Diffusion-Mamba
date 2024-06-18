@@ -6,7 +6,6 @@ import torch.distributed as dist
 import argparse
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
-from zeta.nn import VisionEmbedding
 from load_data import get_sampler, transform_train, NpyDataset
 from torch.cuda.amp import GradScaler, autocast
 import wandb
@@ -20,6 +19,7 @@ import torch.nn.functional as F
 from copy import deepcopy
 from collections import OrderedDict
 from block.CT_encoder import CT_Encoder
+from omegaconf import OmegaConf
 
 def create_logger(logging_dir):
     if dist.get_rank() == 0:  # real logger
@@ -51,7 +51,7 @@ def update_ema(ema_model, model, decay=0.9999):
 def main(args):
     assert torch.cuda.is_available(), "Training currently requires at least one GPU."
     scaler = GradScaler()
-    seed = args.global_seed
+    seed = args.embedder_global_seed
     rank = dist.get_rank()
     device = rank % torch.cuda.device_count()
     torch.manual_seed(seed)
@@ -60,12 +60,12 @@ def main(args):
     if rank == 0:
         if args.wandb:
             wandb.init(project="CT_encoder")
-            wandb.config = {"learning_rate": 0.0001, "epochs": args.epochs, "batch_size": args.global_batch_size}
+            wandb.config = {"learning_rate": 0.0001, "epochs": args.embedder_epoch, "batch_size": args.embedder_global_batch_size}
 
-        os.makedirs(args.results_dir, exist_ok=True)  # Make results folder (holds all experiment subfolders)
-        experiment_index = len(glob(f"{args.results_dir}/*"))
+        os.makedirs(args.embedder_results_dir, exist_ok=True)  # Make results folder (holds all experiment subfolders)
+        experiment_index = len(glob(f"{args.embedder_results_dir}/*"))
         model_string_name = "vision_encoder" 
-        experiment_dir = f"{args.results_dir}/{experiment_index:03d}-{model_string_name}"  # Create an experiment folder
+        experiment_dir = f"{args.embedder_results_dir}/{experiment_index:03d}-{model_string_name}"  # Create an experiment folder
         checkpoint_dir = f"{experiment_dir}/checkpoints"  # Stores saved model checkpoints
         os.makedirs(checkpoint_dir, exist_ok=True)
         logger = create_logger(experiment_dir)
@@ -75,7 +75,7 @@ def main(args):
 
     assert args.image_size % 8 == 0, "Image size must be divisible by 8 (for the VAE encoder)."
 
-    model = CT_Encoder(img_size=28, patch_size=2, in_channels=4, embed_dim=args.embed_dim, contain_mask_token=True)
+    model = CT_Encoder(img_size=28, patch_size=2, in_channels=4, embed_dim=args.embedder_embed_dim, contain_mask_token=True)
     ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
 
     model = torch.nn.parallel.DistributedDataParallel(model.to(device), device_ids=[rank], find_unused_parameters=True)
@@ -88,7 +88,7 @@ def main(args):
     
     train_dataset = NpyDataset(args.ct_image_folder_train, args.mask_image_folder_train, args.mir_image_folder_train, transform=transform_train)
     sampler=get_sampler(train_dataset)
-    train_loader = DataLoader(train_dataset, batch_size=int(args.global_batch_size // dist.get_world_size()), shuffle=False, sampler=sampler, num_workers=args.num_workers, drop_last=True)
+    train_loader = DataLoader(train_dataset, batch_size=int(args.embedder_global_batch_size // dist.get_world_size()), shuffle=False, sampler=sampler, num_workers=args.embedder_num_workers, drop_last=True)
     update_ema(ema, model.module, decay=0)  # Ensure EMA is initialized with synced weights
     ema.eval() 
     model.train()
@@ -100,8 +100,8 @@ def main(args):
     criterion_main = nn.CrossEntropyLoss()
 
     if rank == 0:
-        logger.info(f"Training for {args.epochs} epochs...")
-    for epoch in range(args.epochs):
+        logger.info(f"Training for {args.embedder_epoch} epochs...")
+    for epoch in range(args.embedder_epoch):
         sampler.set_epoch(epoch)
         if rank == 0:
             logger.info(f"Beginning epoch {epoch}...")
@@ -141,7 +141,7 @@ def main(args):
                 end_time = time()
                 steps_per_sec = log_steps / (end_time - start_time)
                 # Reduce loss history over all processes:
-                epoch_isfinish = int(args.global_batch_size // dist.get_world_size()) * item / len(train_dataset) * 100
+                epoch_isfinish = int(args.embedder_global_batch_size // dist.get_world_size()) * item / len(train_dataset) * 100
                 avg_loss = torch.tensor(running_loss / log_steps, device=device)
                 dist.all_reduce(avg_loss, op=dist.ReduceOp.SUM)
                 avg_loss = avg_loss.item() / dist.get_world_size()
@@ -152,7 +152,7 @@ def main(args):
                 log_steps = 0
                 start_time = time()
 
-            if train_steps % args.ckpt_every == 0 and train_steps > 0:
+            if train_steps % args.embedder_ckpt_every == 0 and train_steps > 0:
                 if rank == 0:
                     checkpoint = {
                         "model": model.module.state_dict(),
@@ -171,18 +171,11 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # parser.add_argument("--data-path", type=str, required=True)
-    parser.add_argument("--results-dir", type=str, default="results_ct")
-    parser.add_argument("--image-size", type=int, choices=[224, 256, 512], default=224)
-    parser.add_argument("--epochs", type=int, default=100)
-    parser.add_argument("--global-batch-size", type=int, default=32)
-    parser.add_argument("--global-seed", type=int, default=0)
-    parser.add_argument("--num-workers", type=int, default=4)
-    parser.add_argument("--log-every", type=int, default=10)
-    parser.add_argument("--vae", type=str, choices=["ema", "mse"], default="ema")  # Choice doesn't affect training
-    parser.add_argument("--ckpt-every", type=int, default=6000)
+    parser.add_argument("--config", type=str, required=True)
     parser.add_argument("--wandb", action="store_true", help="Enable WandB.")
-    parser.add_argument("--embed-dim", type=int, default=512)
     parser.add_argument("--autocast", action="store_true", help="Whether to use half-precision training.")
     args = parser.parse_args()
+
+    cli_config = OmegaConf.create({k: v for k, v in args.__dict__.items() if v is not None and k != 'config'})
+    args = OmegaConf.merge(OmegaConf.load(args.config), cli_config)
     main(args)
