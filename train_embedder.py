@@ -75,7 +75,7 @@ def main(args):
 
     assert args.image_size % 8 == 0, "Image size must be divisible by 8 (for the VAE encoder)."
 
-    model = CT_Encoder(img_size=28, patch_size=2, in_channels=4, embed_dim=args.embedder_embed_dim, contain_mask_token=True)
+    model = CT_Encoder(img_size=28, patch_size=args.embedder_patch_size, in_channels=4, embed_dim=args.embedder_embed_dim, contain_mask_token=True)
     ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
 
     model = torch.nn.parallel.DistributedDataParallel(model.to(device), device_ids=[rank], find_unused_parameters=True)

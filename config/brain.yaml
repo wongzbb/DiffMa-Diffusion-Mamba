@@ -37,6 +37,7 @@ embedder_num_workers: 4
 embedder_global_seed: 0
 embedder_global_batch_size: 32
 embedder_embed_dim: 512
+embedder_patch_size: 2
 embedder_results_dir: './results_ct_brain'
 
 
