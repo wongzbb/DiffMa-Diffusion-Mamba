@@ -1,25 +1,20 @@
 # DiM-Diffusion-Mamba
-DiM: Conversion from CT to MRI Using Mamba Diffusion Model (Official PyTorch Implementation)
+Soft Masked Mamba Diffusion Model for CT to MRI Conversion (Official PyTorch Implementation)
 ###  [ArXiv Paper](https://arxiv.org) 
 
 ## 🛠Setup
 
 ```bash
-git clone https://github.com/wongzbb/DiM-Diffusion-Mamba.git
-cd DiM-Diffusion-Mamba
-conda create -n DiM python=3.11.0
-conda activate DiM
+git clone https://github.com/wongzbb/DiffMa-Diffusion-Mamba.git
+cd DiffMa-Diffusion-Mamba
+conda create -n DiffMa python=3.10.0
+conda activate DiffMa
 
-conda install cudatoolkit==11.8 -c nvidia
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
-conda install -c "nvidia/label/cuda-11.8.0" cuda-nvcc
+conda install cudatoolkit==11.7 -c nvidia
+pip install torch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 --index-url https://download.pytorch.org/whl/cu117
+conda install -c "nvidia/label/cuda-11.7.0" cuda-nvcc
 
-conda install cudatoolkit==11.6 -c nvidia
-pip install torch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 --index-url https://download.pytorch.org/whl/cu116
-conda install -c "nvidia/label/cuda-11.6.0" cuda-nvcc
-
-
-pip3 install -U zetascale, wandb, diffusers, open_clip_torch
+pip install open_clip_torch loguru wandb diffusers einops omegaconf torchmetrics decord accelerate pytest fvcore chardet yacs termcolor submitit tensorboardX seaborn
 ```
 ## 📚Data Preparation
 **pelvis**:  You can directly use the [processed images data](https://huggingface.co/datasets/ZhenbinWang/pelvis/tree/main) by ours without further data processing.
