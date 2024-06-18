@@ -43,14 +43,15 @@ huggingface-cli download --repo-type dataset --resume-download ZhenbinWang/brain
 
 ## 🎇Sampling
 You can directly sample the MRI from the checkpoint model. Here is an example for quick usage for using our **pre-trained models**:
-1. Download the pre-trained weights from [here]().
+1. Download the pre-trained weights from [here](https://huggingface.co/ZhenbinWang/DiffMa/tree/main). 
 2. Run [`sample.py`](sample.py) by the following scripts to customize the various arguments.
 ```
+#for mamba1
 CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 sample.py --config ./config/brain.yaml
 ```
 
 ## ⏳Training
-The weight of pretrained DiM can be found [here](https://github.com), and in our implementation we use DiM-L/2 during training DiM.
+The weight of pretrained DiM can be found [here](https://huggingface.co/ZhenbinWang/DiffMa/tree/main), and in our implementation we use DiM-L/2 during training DiM.
 Train DiM with the resolution of 224x224 with `2` GPUs.
 ```
 CUDA_VISIBLE_DEVICES=3,2 torchrun --master_port=123456 --nnodes=1 --nproc_per_node=2 train.py \
