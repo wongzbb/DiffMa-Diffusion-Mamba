@@ -26,7 +26,7 @@ pip install mamba_ssm-2.0.4+cu118torch2.0cxx11abiFALSE-cp310-cp310-linux_x86_64.
 cd ..
 
 pip install --upgrade triton
-which ptxas  # will output your ptxas_path
+which ptxas  # will output your_ptxas_path
 
 # for Chinese
 export HF_ENDPOINT=https://hf-mirror.com
@@ -48,47 +48,42 @@ You can directly sample the MRI from the checkpoint model. Here is an example fo
 ```
 #for mamba1
 CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 sample.py --config ./config/brain.yaml
+
+#for mamba2
+CUDA_VISIBLE_DEVICES=0 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 sample.py --config ./config/brain.yaml
 ```
 
 ## ⏳Training
-The weight of pretrained DiM can be found [here](https://huggingface.co/ZhenbinWang/DiffMa/tree/main), and in our implementation we use DiM-L/2 during training DiM.
+The weight of pretrained DiM can be found [here](https://huggingface.co/ZhenbinWang/DiffMa/tree/main).
 Train DiM with the resolution of 224x224 with `2` GPUs.
 ```
-CUDA_VISIBLE_DEVICES=3,2 torchrun --master_port=123456 --nnodes=1 --nproc_per_node=2 train.py \
-  --model DiM-L/2 \
-  --image-size 224 \
-  --global-batch-size 2 \
-  --ckpt-every 20_000 \
-  --ct-ckpt your_pretrain_ct_encoder_path \
-  --num-workers 16 \
-  --results-dir results \
-  --dt-rank 32 \
-  --d-state 32 \
-  --global-seed 0 \
-  --accumulation-steps 10 \
-  --wandb \
-  --autocast
+# use mamba1
+CUDA_VISIBLE_DEVICES=0,1 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=2 train.py --config ./config/brain.yaml --wandb
+
+# use mamba2
+CUDA_VISIBLE_DEVICES=0,1 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_port=12345 --nnodes=1 --nproc_per_node=2 train.py --config ./config/brain.yaml --use-mamba2 --wandb
 ```
-- `--autocast`: This option enables half-precision training for the model. We recommend disabling it, as it is prone to causing NaN errors. To do so, simply remove this option from the command line.
-- `--model`: Below are some optional models that use different scanning methods. The first one is ours, and we're using the rest for comparison.
+- `--autocast`: This option enables half-precision training for the model. 
 ```
+
 DiM_models = {
     #---------------------------------------Ours------------------------------------------#
-    'DiM-XL/2': DiM_XL_2,  'DiM-XL/4': DiM_XL_4,  'DiM-XL/7': DiM_XL_7,
-    'DiM-L/2' : DiM_L_2,   'DiM-L/4' : DiM_L_4,   'DiM-L/7' : DiM_L_7,
-    'DiM-B/2' : DiM_B_2,   'DiM-B/4' : DiM_B_4,   'DiM-B/7' : DiM_B_7,
-    'DiM-S/2' : DiM_S_2,   'DiM-S/4' : DiM_S_4,   'DiM-S/7' : DiM_S_7,
-    #-----------------------------code reproduction of zigma------------------------------#
+    'DiffMa-XXL/2': DiffMa_XXL_2,  'DiffMa-XXL/4': DiffMa_XXL_4,  'DiffMa-XXL/7': DiffMa_XXL_7,
+    'DiffMa-XL/2': DiffMa_XL_2,  'DiffMa-XL/4': DiffMa_XL_4,  'DiffMa-XL/7': DiffMa_XL_7,
+    'DiffMa-L/2' : DiffMa_L_2,   'DiffMa-L/4' : DiffMa_L_4,   'DiffMa-L/7' : DiffMa_L_7,
+    'DiffMa-B/2' : DiffMa_B_2,   'DiffMa-B/4' : DiffMa_B_4,   'DiffMa-B/7' : DiffMa_B_7,
+    'DiffMa-S/2' : DiffMa_S_2,   'DiffMa-S/4' : DiffMa_S_4,   'DiffMa-S/7' : DiffMa_S_7,
+    #----------------------code reproduction of zigma-------------------------------------#
     'ZigMa-XL/2': ZigMa_XL_2,  'ZigMa-XL/4': ZigMa_XL_4,  'ZigMa-XL/7': ZigMa_XL_7,
     'ZigMa-L/2' : ZigMa_L_2,   'ZigMa-L/4' : ZigMa_L_4,   'ZigMa-L/7' : ZigMa_L_7,
     'ZigMa-B/2' : ZigMa_B_2,   'ZigMa-B/4' : ZigMa_B_4,   'ZigMa-B/7' : ZigMa_B_7,
     'ZigMa-S/2' : ZigMa_S_2,   'ZigMa-S/4' : ZigMa_S_4,   'ZigMa-S/7' : ZigMa_S_7,
-    #--------------------------code reproduction of Vision Mamba--------------------------#
+    #----------------------code reproduction of Vision Mamba------------------------------#
     'ViM-XL/2': ViM_XL_2,  'ViM-XL/4': ViM_XL_4,  'ViM-XL/7': ViM_XL_7,
     'ViM-L/2' : ViM_L_2,   'ViM-L/4' : ViM_L_4,   'ViM-L/7' : ViM_L_7,
     'ViM-B/2' : ViM_B_2,   'ViM-B/4' : ViM_B_4,   'ViM-B/7' : ViM_B_7,
     'ViM-S/2' : ViM_S_2,   'ViM-S/4' : ViM_S_4,   'ViM-S/7' : ViM_S_7,
-    #---------------------------code reproduction of VMamba-------------------------------#
+    #----------------------code reproduction of VMamba------------------------------------#
     'VMamba-XL/2': VMamba_XL_2,  'VMamba-XL/4': VMamba_XL_4,  'VMamba-XL/7': VMamba_XL_7,
     'VMamba-L/2' : VMamba_L_2,   'VMamba-L/4' : VMamba_L_4,   'VMamba-L/7' : VMamba_L_7,
     'VMamba-B/2' : VMamba_B_2,   'VMamba-B/4' : VMamba_B_4,   'VMamba-B/7' : VMamba_B_7,
@@ -98,5 +93,10 @@ DiM_models = {
     'EMamba-L/2' : EMamba_L_2,   'EMamba-L/4' : EMamba_L_4,   'EMamba-L/7' : EMamba_L_7,
     'EMamba-B/2' : EMamba_B_2,   'EMamba-B/4' : EMamba_B_4,   'EMamba-B/7' : EMamba_B_7,
     'EMamba-S/2' : EMamba_S_2,   'EMamba-S/4' : EMamba_S_4,   'EMamba-S/7' : EMamba_S_7,
+    #----------------------code reproduction of DiT---------------------------------------#
+    'DiT-XL/2': DiT_XL_2,  'DiT-XL/4': DiT_XL_4,  'DiT-XL/7': DiT_XL_7,
+    'DiT-L/2' : DiT_L_2,   'DiT-L/4' : DiT_L_4,   'DiT-L/7' : DiT_L_7,
+    'DiT-B/2' : DiT_B_2,   'DiT-B/4' : DiT_B_4,   'DiT-B/7' : DiT_B_7,
+    'DiT-S/2' : DiT_S_2,   'DiT-S/4' : DiT_S_4,   'DiT-S/7' : DiT_S_7,
 }
 ```
