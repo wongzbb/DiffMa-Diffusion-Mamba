@@ -18,7 +18,7 @@ pip install open_clip_torch loguru wandb diffusers einops omegaconf torchmetrics
 
 conda install packaging
 
-mkdir whl & cd whl
+mkdir whl && cd whl
 wget https://github.com/state-spaces/mamba/releases/download/v2.0.4/mamba_ssm-2.0.4+cu118torch2.0cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
 wget https://github.com/Dao-AILab/causal-conv1d/releases/download/v1.2.2.post1/causal_conv1d-1.2.2.post1+cu118torch2.0cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
 pip install causal_conv1d-1.2.2.post1+cu118torch2.0cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
@@ -68,7 +68,7 @@ CUDA_VISIBLE_DEVICES=0,1 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_por
 - `--autocast`: This option enables half-precision training for the model. 
 
 
-## ⏳Training Vision Embedder
+## ⏳Train Vision Embedder
 The weight of pretrained DiffMa can be found at [`pretrain_ct_embedder`](pretrain_ct_vision_embedder).
 Train CT Vision Embedder by the following scripts to customize the various arguments.
 ```
