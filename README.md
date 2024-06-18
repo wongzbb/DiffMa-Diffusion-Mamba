@@ -27,8 +27,6 @@ cd ..
 
 pip install --upgrade triton
 which ptxas  # will output your ptxas_path
-#CUDA_VISIBLE_DEVICES=2 TRITON_PTXAS_PATH=ptxas_path torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 train.py --config config/brain.yaml --use-mamba2
-#CUDA_VISIBLE_DEVICES=2 torchrun --master_port=14945 --nnodes=1 --nproc_per_node=1 train.py --config config/pelvis.yaml
 
 # for Chinese
 export HF_ENDPOINT=https://hf-mirror.com
