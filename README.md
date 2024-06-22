@@ -1,6 +1,25 @@
-# DiffMa-Diffusion-Mamba
-Soft Masked Mamba Diffusion Model for CT to MRI Conversion (Official PyTorch Implementation)
-###  [ArXiv Paper](https://arxiv.org) 
+<div id="top" align="center">
+
+# Soft Masked Mamba Diffusion Model for CT to MRI Conversion (Official PyTorch Implementation)
+  
+  kkk </br>
+  
+  [![arXiv](https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg)](http://arxiv.org) </br>
+   [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/ZhenbinWang/DiffMa/tree/main)
+
+
+
+</div>
+
+## News🚀
+(2024.xx.xx) ***The first edition of our paper has been uploaded to arXiv***🔥🔥
+
+(2024.xx.xx) ***Model weights have been uploaded to HuggingFace for download***
+
+(2024.04.20) ***The processed datasets has been uploaded to HuggingFace***
+
+(2024.04.18) ***The project code has been uploaded to Github*** 🔥🔥
+
 
 ## 🛠Setup
 
