@@ -2,7 +2,7 @@
 
 # Soft Masked Mamba Diffusion Model for CT to MRI Conversion (Official PyTorch Implementation)
   
-  Zhenbin Wang, Lei Zhang, Lituan Wang, Zhenwei Zhang </br>
+  [Zhenbin Wang](https://github.com/wongzbb), Lei Zhang, [Lituan Wang](https://github.com/LTWangSCU), Zhenwei Zhang </br>
   
   [![arXiv](https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg)](http://arxiv.org)
    [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/ZhenbinWang/DiffMa/tree/main)  </br>
