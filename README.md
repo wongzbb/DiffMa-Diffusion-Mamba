@@ -12,9 +12,9 @@
 </div>
 
 ## News🚀
-(2024.06.23) ***The first edition of our paper has been uploaded to arXiv*** 🔥🔥
+(2024.06.25) ***The first edition of our paper has been uploaded to arXiv*** 🔥🔥
 
-(2024.06.22) ***We made the code publicly accessible*** 🔥🔥
+(2024.06.23) ***We made the code publicly accessible*** 🔥🔥
 
 (2024.06.03) ***Our code integrate Mamba2, use `--use-mamba2` to enjoy it***
 
