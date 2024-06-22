@@ -12,15 +12,15 @@
 </div>
 
 ## News🚀
-(2024.06.23) ***The first edition of our paper has been uploaded to arXiv***🔥🔥
+(2024.06.23) ***The first edition of our paper has been uploaded to arXiv*** 🔥🔥
 
-(2024.06.22) ***We made the code publicly accessible.***🔥🔥
+(2024.06.22) ***We made the code publicly accessible*** 🔥🔥
 
-(2024.06.03) ***Our code integrates Mamba2, use `--use-mamba2` to enjoy it***
+(2024.06.03) ***Our code integrate Mamba2, use `--use-mamba2` to enjoy it***
 
 (2024.06.10) ***Model weights have been uploaded to HuggingFace for download***
 
-(2024.04.14) ***The project code has been uploaded to Github (set private)***🔥🔥
+(2024.04.14) ***The project code has been uploaded to Github (set private)*** 🔥🔥
 
 (2024.04.11) ***The processed datasets has been uploaded to HuggingFace***
 
