@@ -92,7 +92,7 @@ CUDA_VISIBLE_DEVICES=0,1 TRITON_PTXAS_PATH=your_ptxas_path torchrun --master_por
 
 
 ## ⏳Train Vision Embedder
-The weight of pretrained DiffMa can be found at [`pretrain_ct_embedder`](pretrain_ct_vision_embedder).
+The weight of pretrained Vision Embedder can be found at [`pretrain_ct_embedder`](pretrain_ct_vision_embedder).
 Train CT Vision Embedder by the following scripts to customize the various arguments.
 ```
 CUDA_VISIBLE_DEVICES=0 torchrun --master_port=12345 --nnodes=1 --nproc_per_node=1 train_embedder.py --config ./config/pelvis.yaml
