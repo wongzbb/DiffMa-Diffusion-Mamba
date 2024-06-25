@@ -1,12 +1,11 @@
 <div id="top" align="center">
 
-# Soft Masked Mamba Diffusion Model for CT to MRI Conversion (Official PyTorch Implementation)
+# Soft Masked Mamba Diffusion Model for CT to MRI Conversion
   
   [Zhenbin Wang](https://github.com/wongzbb), Lei Zhang<sup>✉</sup>, [Lituan Wang](https://github.com/LTWangSCU), [Zhenwei Zhang](https://github.com/Zhangzw-99) </br>
   
   [![arXiv](https://img.shields.io/badge/arXiv-2406.15910-b31b1b.svg)](https://arxiv.org/abs/2406.15910)
    [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/ZhenbinWang/DiffMa/tree/main)  </br>
-
 
 
 </div>
@@ -132,5 +131,16 @@ DiffMa_models = {
     'DiT-L/2' : DiT_L_2,   'DiT-L/4' : DiT_L_4,   'DiT-L/7' : DiT_L_7,
     'DiT-B/2' : DiT_B_2,   'DiT-B/4' : DiT_B_4,   'DiT-B/7' : DiT_B_7,
     'DiT-S/2' : DiT_S_2,   'DiT-S/4' : DiT_S_4,   'DiT-S/7' : DiT_S_7,
+}
+```
+
+## 📜Citation
+If you find this work helpful for your project,please consider citing the following paper:
+```
+@article{li2024endora,
+  author    = {Chenxin Li and Hengyu Liu and Yifan Liu and Brandon Y. Feng, and Wuyang Li and Xinyu Liu, Zhen Chen and Jing shao and Yixuan Yuan},
+  title     = {Endora: Video Generation Models as Endoscopy Simulators},
+  journal   = {arXiv preprint arXiv:2403.11050},
+  year      = {2024}
 }
 ```
