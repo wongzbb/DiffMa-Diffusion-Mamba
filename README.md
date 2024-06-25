@@ -4,7 +4,7 @@
   
   [Zhenbin Wang](https://github.com/wongzbb), Lei Zhang<sup>✉</sup>, [Lituan Wang](https://github.com/LTWangSCU), [Zhenwei Zhang](https://github.com/Zhangzw-99) </br>
   
-  [![arXiv](https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg)](http://arxiv.org)
+  [![arXiv](https://img.shields.io/badge/arXiv-2406.15910-b31b1b.svg)](https://arxiv.org/abs/2406.15910)
    [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/ZhenbinWang/DiffMa/tree/main)  </br>
 
 
