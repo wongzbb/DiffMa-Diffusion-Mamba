@@ -134,7 +134,7 @@ DiffMa_models = {
 }
 ```
 
-## 📜Citation
+<!-- ## 📜Citation
 If you find this work helpful for your project,please consider citing the following paper:
 ```
 @article{li2024endora,
@@ -143,4 +143,4 @@ If you find this work helpful for your project,please consider citing the follow
   journal   = {arXiv preprint arXiv:2403.11050},
   year      = {2024}
 }
-```
+``` -->
