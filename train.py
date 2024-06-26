@@ -89,7 +89,7 @@ def create_logger(logging_dir):
 
 def main(args):
     """
-    Trains a new DiM model.
+    Trains a new DiffMa model.
     """
     assert torch.cuda.is_available(), "Training currently requires at least one GPU."
     scaler = GradScaler()
@@ -158,7 +158,7 @@ def main(args):
     # load CT encoder
     ct_encoder = CT_Encoder(
         img_size=args.image_size // 8, 
-        patch_size=int(args.model[-1]), #Note that it corresponds to the patch size of DiM
+        patch_size=int(args.model[-1]), #Note that it corresponds to the patch size of DiffMa
         in_channels=4, 
         embed_dim=512, #Corresponding to the output dimension of CLIP's image encoder, the dimension is 384 (for ViT-L/14), 512 (for ViT-B/16 or BiomedCLIP), or 1024 (for Rn50)
         contain_mask_token=True,
@@ -169,7 +169,7 @@ def main(args):
     ct_encoder.eval()  # important!
 
     if rank == 0:
-        logger.info(f"DiM Parameters: {sum(p.numel() for p in model.parameters()):,}")
+        logger.info(f"DiffMa Parameters: {sum(p.numel() for p in model.parameters()):,}")
         logger.info(f"Use half-precision training? {args.autocast}")
 
     #load CLIP image encoder
@@ -287,7 +287,7 @@ def main(args):
                 log_steps = 0
                 start_time = time()
 
-            # Save DiM checkpoint:
+            # Save DiffMa checkpoint:
             if train_steps % args.ckpt_every == 0 and train_steps > 0:
                 if rank == 0:
                     checkpoint = {
@@ -312,7 +312,6 @@ def main(args):
 
 
 if __name__ == "__main__":
-    # Default args here will train DiM-B/2 with the hyperparameters we used in our paper (except training iters).
     parser = argparse.ArgumentParser()
     parser.add_argument("--wandb", action="store_true", help="Enable WandB.")
     parser.add_argument("--autocast", action="store_true", help="Whether to use half-precision training.")
