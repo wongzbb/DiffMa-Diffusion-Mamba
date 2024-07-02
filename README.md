@@ -134,13 +134,13 @@ DiffMa_models = {
 }
 ```
 
-<!-- ## 📜Citation
-If you find this work helpful for your project,please consider citing the following paper:
+## 📜Citation
+If you find this work helpful for your project, please consider citing the following paper:
 ```
-@article{li2024endora,
-  author    = {Chenxin Li and Hengyu Liu and Yifan Liu and Brandon Y. Feng, and Wuyang Li and Xinyu Liu, Zhen Chen and Jing shao and Yixuan Yuan},
-  title     = {Endora: Video Generation Models as Endoscopy Simulators},
-  journal   = {arXiv preprint arXiv:2403.11050},
-  year      = {2024}
+@article{wang2024soft,
+  title={Soft Masked Mamba Diffusion Model for CT to MRI Conversion},
+  author={Wang, Zhenbin and Zhang, Lei and Wang, Lituan and Zhang, Zhenwei},
+  journal={arXiv preprint arXiv:2406.15910},
+  year={2024}
 }
-``` -->
+```
