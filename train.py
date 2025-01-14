@@ -153,7 +153,8 @@ def main(args):
     model = DDP(model.to(device), device_ids=[rank])
 
     diffusion = create_diffusion(timestep_respacing="")  # default: 1000 steps, linear noise schedule, see ./diffusion/__init__.py
-    vae = AutoencoderKL.from_pretrained(f"stabilityai/sd-vae-ft-{args.vae}").to(device)
+    vae_path = "./models/stabilityai/sd-vae-ft-ema"  # 本地路径
+    vae = AutoencoderKL.from_pretrained(vae_path).to(device)
 
     # load CT encoder
     ct_encoder = CT_Encoder(
@@ -173,7 +174,17 @@ def main(args):
         logger.info(f"Use half-precision training? {args.autocast}")
 
     #load CLIP image encoder
-    clip_model, _ = create_model_from_pretrained('hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224')  #here we use BiomedCLIP
+    # 使用 ViT-B-16
+    # 指定模型路径
+    model_path = "./models/ViT-B-16"  # 这里的路径应该包含模型的权重文件,我下载在同一根目录下了
+    # 加载 CLIP 模型
+    print(f"Using model from: {model_path}")
+    clip_model, preprocess = create_model_and_transforms(
+        model_name="ViT-B-16",  # 指定模型架构
+        pretrained="openai"  # 提供本地预训练模型路径
+    )
+    # 提取图像编码器
+    image_encoder = clip_model.visual.to(device)
     image_encoder = clip_model.visual.to(device)
 
     # Setup optimizer (we used default Adam betas=(0.9, 0.999) and a constant learning rate of 1e-4 in our paper):

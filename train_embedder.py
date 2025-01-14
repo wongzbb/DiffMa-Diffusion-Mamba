@@ -79,7 +79,8 @@ def main(args):
     ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
 
     model = torch.nn.parallel.DistributedDataParallel(model.to(device), device_ids=[rank], find_unused_parameters=True)
-    vae = AutoencoderKL.from_pretrained(f"stabilityai/sd-vae-ft-{args.vae}").to(device)
+    vae_path = "./models/stabilityai/sd-vae-ft-ema"  # 本地路径
+    vae = AutoencoderKL.from_pretrained(vae_path).to(device)
 
     if rank == 0:
         logger.info(f"Parameters: {sum(p.numel() for p in model.parameters()):,}")
